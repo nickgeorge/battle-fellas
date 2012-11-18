@@ -2,11 +2,10 @@ Box = function(size) {
   if (!Box.normalBuffer) Box.initBuffers();
 
   this.position = [0, 0, 0];
-  this.size = size;
   this.fulcrum = null;
 
   this.colorBuffer = null;
-  this.vertexBuffer = Box.createVertexBuffer(size);
+  this.vertexBuffer = this.createVertexBuffer(size);
 
   this.theta = 0;
   this.phi = 0;
@@ -127,46 +126,50 @@ Box.initBuffers = function() {
   Box.indexBuffer.numItems = 36;
 }
 
-Box.createVertexBuffer = function(size) {
-  size = [size[0]/2, size[1]/2, size[2]/2];
+Box.prototype.createVertexBuffer = function(point1, point2) {
+  if (!point2) {
+    point2 = Vector.multiply(point1, .5);
+    point1 = Vector.multiply(point2, -1);
+  }
+  this.size = Vector.difference(point1, point2);
   var vertexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
   var vertices = [
   // Front face
-    -size[0], -size[1],  size[2],
-     size[0], -size[1],  size[2],
-     size[0],  size[1],  size[2],
-    -size[0],  size[1],  size[2],
+    point1[0], point1[1], point2[2],
+    point2[0], point1[1], point2[2],
+    point2[0], point2[1], point2[2],
+    point1[0], point2[1], point2[2],
 
     // Back face
-    -size[0], -size[1], -size[2],
-    -size[0],  size[1], -size[2],
-     size[0],  size[1], -size[2],
-     size[0], -size[1], -size[2],
+    point1[0], point1[1], point1[2],
+    point1[0], point2[1], point1[2],
+    point2[0], point2[1], point1[2],
+    point2[0], point1[1], point1[2],
 
     // Top face
-    -size[0],  size[1], -size[2],
-    -size[0],  size[1],  size[2],
-     size[0],  size[1],  size[2],
-     size[0],  size[1], -size[2],
+    point1[0], point2[1], point1[2],
+    point1[0], point2[1], point2[2],
+    point2[0], point2[1], point2[2],
+    point2[0], point2[1], point1[2],
 
     // Bottom face
-    -size[0], -size[1], -size[2],
-     size[0], -size[1], -size[2],
-     size[0], -size[1],  size[2],
-    -size[0], -size[1],  size[2],
+    point1[0], point1[1], point1[2],
+    point2[0], point1[1], point1[2],
+    point2[0], point1[1], point2[2],
+    point1[0], point1[1], point2[2],
 
     // Right face
-     size[0], -size[1], -size[2],
-     size[0],  size[1], -size[2],
-     size[0],  size[1],  size[2],
-     size[0], -size[1],  size[2],
+    point2[0], point1[1], point1[2],
+    point2[0], point2[1], point1[2],
+    point2[0], point2[1], point2[2],
+    point2[0], point1[1], point2[2],
 
     // Left face
-    -size[0], -size[1], -size[2],
-    -size[0], -size[1],  size[2],
-    -size[0],  size[1],  size[2],
-    -size[0],  size[1], -size[2]
+    point1[0], point1[1], point1[2],
+    point1[0], point1[1], point2[2],
+    point1[0], point2[1], point2[2],
+    point1[0], point2[1], point1[2]
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
   vertexBuffer.itemSize = 3;

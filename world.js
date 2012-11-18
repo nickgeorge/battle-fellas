@@ -51,37 +51,38 @@ World.prototype.populate = function() {
   light.setDirection([0, -.5, -1]);
   light.setAmbientColor([.2, .2, .2]);
   light.setDirectionalColor([.8, .8, .8]);
-  world.addLight(light);
+  this.addLight(light);
 
   var numFellas = 10;
   var numCrates = 0;
 
-  this.board = new Box([200, 100, 1]).
+  this.board = new Box([100, 200, 1]).
       setColor([.5, .5, .5]).
       setPosition([0, 0, -.5]);
-
+  console.log("this");
+  console.log(this.board);
   for (var i = 0; i < numFellas; i++) {
-    world.add(new Fella([      
-      Math.random()*world.board.size[0] + world.board.min(0),
-      Math.random()*world.board.size[1] + world.board.min(1),
+    this.add(new Fella([      
+      Math.random()*this.board.size[0] + this.board.min(0),
+      Math.random()*this.board.size[1] + this.board.min(1),
       0
     ]).setTheta(i*Math.PI*2/numFellas));
   }
   for (var i = 0; i < numCrates; i++) {
-    world.add(new Box([1, 1, 1]).
+    this.add(new Box([1, 1, 1]).
         setTheta(Math.random() * Math.PI*2).
         setPosition([
-          Math.random()*world.board.size[0] + world.board.min(0),
-          Math.random()*world.board.size[1] + world.board.min(1),
-          5 + Math.random()*10 + world.board.max(2)
+          Math.random()*this.board.size[0] + this.board.min(0),
+          Math.random()*this.board.size[1] + this.board.min(1),
+          5 + Math.random()*10 + this.board.max(2)
         ]).
         setColor([0, 1, 0]));
   }
 };
 
 World.prototype.inBounds = function(xyz) {
-  return Math.abs(xyz[0]) < world.board.max(0) 
-      && Math.abs(xyz[1]) < world.board.max(1);
+  return Math.abs(xyz[0]) < this.board.max(0) 
+      && Math.abs(xyz[1]) < this.board.max(1);
 };
 
 World.prototype.addAndRemoveThings = function() {
@@ -107,11 +108,11 @@ World.prototype.checkCollisions = function() {
         var d2 = d_x*d_x + d_y*d_y + d_z*d_z;
 
         if (d2 < 1) {
-          thing.alive && world.add(new Fella([1, 1, 1]).
+          thing.alive && this.add(new Fella([1, 1, 1]).
               setTheta(Math.random() * Math.PI*2).
               setPosition([
-                Math.random()*world.board.size[0] + world.board.min(0),
-                Math.random()*world.board.size[1] + world.board.min(1),
+                Math.random()*this.board.size[0] + this.board.min(0),
+                Math.random()*this.board.size[1] + this.board.min(1),
                 0
               ]));
           thing.die();

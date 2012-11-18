@@ -4,30 +4,12 @@ Util.degToRad = function(degrees) {
   return degrees * Math.PI / 180;
 };
 
-Util.randomColor = function() {
-  return [Math.random(), Math.random(), Math.random(), 1];
-};
-
-Util.reverseColor = function(rgba) {
-
-  return [1 - rgba[0], 1 - rgba[1], 1 - rgba[2], rgba[3]];
-};
-
-Util.distanceSquared = function(v1, v2) {
-  return (v1[0] - v2[0])*(v1[0] - v2[0]) +
-      (v1[1]-v2[1])*(v1[1]-v2[1]) +
-      (v1[2]-v2[2])*(v1[2]-v2[2]);
-};
-
-Util.thetaTo = function(v1, v2) {
-  return Math.atan2(v2[1] - v1[1], v2[0] - v1[0]);
-};
-
 Util.inherits = function(childCtor, parentCtor) {
   /** @constructor */
   function tempCtor() {};
   tempCtor.prototype = parentCtor.prototype;
   childCtor.superClass_ = parentCtor.prototype;
+  childCtor.prototype.super = parentCtor;
   childCtor.prototype = new tempCtor();
   /** @override */
   childCtor.prototype.constructor = childCtor;

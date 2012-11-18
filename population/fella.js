@@ -8,7 +8,7 @@ Fella = function(xyz, rgb) {
   this.target = null;
   this.parts = [];
 
-  this.buildBody(rgb || Util.randomColor());
+  this.buildBody(rgb || Vector.randomColor());
 };
 
 Fella.MAX_LEG_ANGLE = Util.degToRad(30);
@@ -17,7 +17,8 @@ Fella.prototype.advance = function(dt) {
   if (this.alive) {
     if (!this.target || !this.target.alive) this.aquireTarget();
     if (this.target && this.target.alive) {
-      this.theta = Util.thetaTo(this.position, this.target.position);
+      this.theta = Vector.thetaTo(
+        this.position, this.target.position);
     if (Math.random() < .015) this.shoot();
     }
     this.advanceAlive(dt);
@@ -35,7 +36,7 @@ Fella.prototype.getClosestThing = function(alive) {
   var closestThing = null;
   for (var i = 0, thing; thing = world.things[i]; i++) {
     if (!thing.alive || this == thing) continue;
-    var d = Util.distanceSquared(this.position, thing.position);
+    var d = Vector.distanceSquared(this.position, thing.position);
     if (d < minDistance) {
       minDistance = d;
       closestThing = thing;
@@ -173,7 +174,7 @@ Fella.prototype.shoot = function() {
   if (disc < 0) return;
 
   var phi = -Math.atan((-b + Math.sqrt(disc))/(2*a));
-  var theta = Util.thetaTo(this.position, this.target.position);
+  var theta = Vector.thetaTo(this.position, this.target.position);
   var s_xy =  Math.cos(phi)*s;
 
   var v_shot = [

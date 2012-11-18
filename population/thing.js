@@ -40,9 +40,12 @@ Thing.prototype.setColorInternal = function() {
 };
 
 Thing.prototype.draw = function() {
+  throw "Draw unimplemented for type " +
+      typeof this;
 
 };
 
 Thing.prototype.advance = function() {
-
+  throw "Advance unimplemented for type " +
+      typeof this;
 };
