@@ -1,0 +1,211 @@
+<html>
+  <head>
+    <title>Board</title>
+    <meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>
+
+    <script type='text/javascript' src='util/util.js'></script>
+    <script type='text/javascript' src='gl/glMatrix-0.9.5.min.js'></script>
+    <script type='text/javascript' src='gl/webgl-utils.js'></script>
+    <script type='text/javascript' src='gl/gl.js'></script>
+    <script type='text/javascript' src='population/thing.js'></script>
+    <script type='text/javascript' src='population/box.js'></script>
+    <script type='text/javascript' src='population/sphere.js'></script>
+    <script type='text/javascript' src='population/arrow.js'></script>
+    <script type='text/javascript' src='population/fella.js'></script>
+    <script type='text/javascript' src='world.js'></script>
+    <script type='text/javascript' src='camera.js'></script>
+    <script type='text/javascript' src='shader_program.js'></script>
+    <script type='text/javascript' src='util/light.js'></script>
+
+    <script id='shader-fs' type='x-shader/x-fragment'>
+      precision mediump float;
+
+      varying vec4 vColor;
+      varying vec3 vLightWeighting;
+
+      void main(void) {
+        gl_FragColor = vec4(vColor.rgb * vLightWeighting, vColor.a);
+      }
+    </script>
+
+    <script id='shader-vs' type='x-shader/x-vertex'>
+      attribute vec3 aVertexPosition;
+      attribute vec3 aVertexNormal;
+      attribute vec4 aVertexColor;
+
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+      uniform mat3 uNMatrix;
+
+      uniform vec3 uAmbientColor;
+      uniform vec3 uLightingDirection;
+      uniform vec3 uDirectionalColor;
+
+      varying vec4 vColor;
+      varying vec3 vLightWeighting;
+
+      void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+
+        vec3 transformedNormal = uNMatrix * aVertexNormal;
+        float directionalLightWeighting = max(
+            dot(transformedNormal, uLightingDirection),
+            0.0);
+        vLightWeighting = 
+            uAmbientColor + uDirectionalColor * directionalLightWeighting;
+        
+        vColor = aVertexColor;
+      }
+    </script>
+
+    <script type='text/javascript'>
+
+      var world = null;
+      var camera = null;
+      var gl = null;
+      var shaderProgram = null;
+      var framerate = null;
+
+      function initBuffers() {
+        Box.initBuffers();
+      }
+
+      function drawScene() {
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clearColor(gl.clearColorRgba[0], gl.clearColorRgba[1], gl.clearColorRgba[2], 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        mat4.perspective(45, gl.viewportWidth/gl.viewportHeight,
+            0.1, 1000.0, gl.pMatrix);
+
+        camera.transform();
+        world.applyLights();
+        world.draw();
+      }
+
+      function animate() {
+        var timeNow = new Date().getTime();
+        if (framerate.lastTime != 0) {
+          var elapsed = timeNow - framerate.lastTime;
+          if (elapsed < 40) {
+            var dt = elapsed/1000;
+            camera.advance(dt)
+            world.advance(dt);
+          }
+          framerate.snapshot();
+        }
+        framerate.lastTime = timeNow;
+      }
+
+      function tick() {
+        requestAnimFrame(tick);
+        drawScene();
+        animate();
+      }
+      var pointBox1 = null;
+      var pointBox2 = null;
+
+      function webGLStart() {
+        var canvas = document.getElementById('canvas');
+        canvas.addEventListener('mousemove', onMouseClick, false);
+        document.addEventListener('keydown', onKey, true);
+        document.addEventListener('keyup', onKey, true);
+        gl = GL.createGL(canvas);
+        shaderProgram = ShaderProgram.getShaderProgram();
+        initBuffers();
+
+        gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.CULL_FACE);
+
+        world = new World();
+        world.populate();
+        framerate = new Framerate('framerate');
+
+        camera = new Camera();
+        camera.setPosition([-0, -40, 10]);
+        camera.phi = Math.PI/4;
+
+        pointBox1 = new Box([1, 1, 1]).
+            setColor([1, 0, 0]).
+            setPosition([0, 0, 0]);
+        world.add(pointBox1);
+
+        requestAnimFrame(tick);
+      }
+
+      function onMouseClick(event) {
+        var coords = getRelativeCoords(event);
+        var mDX = -(coords.x - 750)/1500;
+        var fovPhi = -(coords.y - 375)/750 * Math.PI/4;
+        var fovTheta = mDX * Math.PI/2;
+
+        var x = camera.position[0];
+        var y = camera.position[1];
+        var z = camera.position[2];
+
+        var d_i = Math.tan(camera.phi) * z;
+        var dTheta = Math.atan(mDX)
+
+        var phi = Math.atan(Math.tan(camera.phi)/Math.cos(fovTheta)) + fovPhi;
+        var theta = camera.theta + fovTheta;
+
+        var t = z / Math.cos(phi);
+        var tXY = Math.sin(phi) * t; 
+        
+        var newX = x - tXY * Math.sin(theta);// + 37.5 * Math.cos(theta);
+        var newY = y + tXY * Math.cos(theta);// + 37.5 * Math.sin(theta);
+
+        pointBox1.setPosition([newX, newY, 0]);
+        //ointBox2.setPosition([midX, midY, 0]);
+      }
+
+      function onKey(event) {
+        switch (event.keyCode) {
+          case 65: 
+            camera.vX = event.type == 'keydown' ? -camera.vRMag : 0;
+            break;
+          case 87: 
+            camera.vY = event.type == 'keydown' ? camera.vRMag : 0;
+            break;
+          case 68: 
+            camera.vX = event.type == 'keydown' ? camera.vRMag : 0;
+            break;
+          case 83: 
+            camera.vY = event.type == 'keydown' ? -camera.vRMag : 0;
+            break;
+          case 38: 
+            camera.vPhi = event.type == 'keydown' ? camera.vPhiMag : 0;
+            break;
+          case 40: 
+            camera.vPhi = event.type == 'keydown' ? -camera.vPhiMag : 0;
+            break;
+          case 37: 
+            camera.vTheta = event.type == 'keydown' ? camera.vThetaMag : 0;
+            break;
+          case 39: 
+            camera.vTheta = event.type == 'keydown' ? -camera.vThetaMag : 0;
+            break;
+          default: 
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      function getRelativeCoords(event) {
+        if (event.offsetX) { 
+          return {x: event.offsetX, y: event.offsetY}; 
+        }
+        return {x: event.layerX, y: event.layerY};
+      }
+
+    </script>
+  </head>
+
+  <body onload='webGLStart();'>
+    <canvas id='canvas' style='border: none;' width='1500' height='750'>
+      Get a real browser.
+    </canvas>
+    <div id='framerate'></div>
+  </body>
+
+</html>
