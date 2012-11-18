@@ -1,6 +1,7 @@
 World = function() {
   this.things = [];
   this.projectiles = [];
+  this.effects = [];
   this.lights = [];
   this.theta = 0;
   this.rotSpeed = 0;
@@ -8,6 +9,7 @@ World = function() {
   this.G = 30;
 
   this.thingsToRemove = [];
+  this.effectsToRemove = [];
 };
 
 World.prototype.add = function(thing) {
@@ -19,6 +21,7 @@ World.prototype.draw = function() {
   this.board.draw();
   this.things.apply("draw");
   this.projectiles.apply("draw");
+  this.effects.apply("draw");
 };
 
 World.prototype.advance = function(dt) {
@@ -26,7 +29,11 @@ World.prototype.advance = function(dt) {
   this.theta += this.rotSpeed * dt;
   this.things.apply("advance", [dt]);
   this.projectiles.apply("advance", [dt]);
+  this.effects.apply("advance", [dt]);
   this.checkCollisions();
+
+  while (this.projectiles.length > 100) this.projectiles.shift();
+  while (this.effects.length > 200) this.effects.shift();
 };
 
 World.prototype.addLight = function(light) {
@@ -46,15 +53,19 @@ World.prototype.populate = function() {
   light.setDirectionalColor([.8, .8, .8]);
   world.addLight(light);
 
-  var numFellas = 1;
-  var numCrates = 5;
+  var numFellas = 10;
+  var numCrates = 0;
 
-  this.board = new Box([100, 100, 1]).
+  this.board = new Box([200, 100, 1]).
       setColor([.5, .5, .5]).
       setPosition([0, 0, -.5]);
 
   for (var i = 0; i < numFellas; i++) {
-    world.add(new Fella([0, 0, 0]).setTheta(i*Math.PI*2/numFellas));
+    world.add(new Fella([      
+      Math.random()*world.board.size[0] + world.board.min(0),
+      Math.random()*world.board.size[1] + world.board.min(1),
+      0
+    ]).setTheta(i*Math.PI*2/numFellas));
   }
   for (var i = 0; i < numCrates; i++) {
     world.add(new Box([1, 1, 1]).
@@ -78,7 +89,11 @@ World.prototype.addAndRemoveThings = function() {
     this.things.remove(thing);
     thing = null;
   }
-  this.thingsToRemove = [];
+  for (var i = 0, effect; effect = this.effectsToRemove[i]; i++) {
+    this.effects.remove(effect);
+    effect = null;
+  }
+  this.effectsToRemove = [];
 };
 
 World.prototype.checkCollisions = function() {
@@ -87,22 +102,21 @@ World.prototype.checkCollisions = function() {
       if (projectile.parent == thing) continue;
       var d_x = thing.position[0] - projectile.position[0];
       var d_y = thing.position[1] - projectile.position[1];
-      var d_z = thing.position[2] - projectile.position[2];
+      var d_z = thing.position[2]+1.5 - projectile.position[2];
       if (d_x < 2 && d_y < 2 && d_z < 2) {
         var d2 = d_x*d_x + d_y*d_y + d_z*d_z;
 
         if (d2 < 1) {
+          thing.alive && world.add(new Fella([1, 1, 1]).
+              setTheta(Math.random() * Math.PI*2).
+              setPosition([
+                Math.random()*world.board.size[0] + world.board.min(0),
+                Math.random()*world.board.size[1] + world.board.min(1),
+                0
+              ]));
           thing.die();
           
-          world.add(new Box([1, 1, 1]).
-            setTheta(Math.random() * Math.PI*2).
-            setPosition([
-              Math.random()*world.board.size[0] + world.board.min(0),
-              Math.random()*world.board.size[1] + world.board.min(1),
-              5 + Math.random()*10 + world.board.max(2)
-            ]).
-            setColor([0, 1, 0]));
-          console.log(world.things);
+
         }
       } 
     }

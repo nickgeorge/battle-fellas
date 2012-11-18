@@ -16,23 +16,25 @@ Fella.MAX_LEG_ANGLE = Util.degToRad(30);
 Fella.prototype.advance = function(dt) {
   if (this.alive) {
     if (!this.target || !this.target.alive) this.aquireTarget();
-    this.theta = Util.thetaTo(this.position, this.target.position);
-    this.advanceAlive(dt);
+    if (this.target && this.target.alive) {
+      this.theta = Util.thetaTo(this.position, this.target.position);
     if (Math.random() < .015) this.shoot();
+    }
+    this.advanceAlive(dt);
   } else { 
     this.advanceDead(dt);
   }
 };
 
 Fella.prototype.aquireTarget = function() {
-  this.target = this.getClosestThing();
+  this.target = this.getClosestThing(true);
 };
 
-Fella.prototype.getClosestThing = function() {
+Fella.prototype.getClosestThing = function(alive) {
   var minDistance = Number.MAX_VALUE;
   var closestThing = null;
   for (var i = 0, thing; thing = world.things[i]; i++) {
-    if (this == thing) continue;
+    if (!thing.alive || this == thing) continue;
     var d = Util.distanceSquared(this.position, thing.position);
     if (d < minDistance) {
       minDistance = d;
@@ -77,6 +79,7 @@ Fella.prototype.advanceAlive = function(dt) {
 };
 
 Fella.prototype.die = function() {
+  if (!this.alive) return;
   var deathSpeed = 3.5;
   for (var i = 0, part; part = this.parts[i]; i++) {
     var vTheta = Math.random()*2*Math.PI;
@@ -96,6 +99,8 @@ Fella.prototype.die = function() {
     }
   }
   this.alive = false;
+  world.things.remove(this);
+  world.effects.push(this);
 };
 
 Fella.prototype.draw = function() {
@@ -156,7 +161,7 @@ Fella.prototype.buildBody = function(rgb) {
 Fella.prototype.shoot = function() {
   var d_x = this.target.position[0] - this.position[0];
   var d_y = this.target.position[1] - this.position[1];
-  var d_z = this.target.position[2] - this.position[2] - 1.5;
+  var d_z = this.target.position[2] - this.position[2];
   var d_xy = Math.sqrt(d_x*d_x + d_y*d_y);
   var s = Arrow.DEFAULT_SPEED;
 

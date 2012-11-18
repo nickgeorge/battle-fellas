@@ -106,7 +106,7 @@
 
       function webGLStart() {
         var canvas = document.getElementById('canvas');
-        canvas.addEventListener('mousemove', onMouseClick, false);
+        canvas.addEventListener('mousemove', onMouseMoved, false);
         document.addEventListener('keydown', onKey, true);
         document.addEventListener('keyup', onKey, true);
         gl = GL.createGL(canvas);
@@ -121,41 +121,49 @@
         framerate = new Framerate('framerate');
 
         camera = new Camera();
-        camera.setPosition([-0, -40, 10]);
+        camera.setPosition([-0, -50, 20]);
         camera.phi = Math.PI/4;
 
         pointBox1 = new Box([1, 1, 1]).
             setColor([1, 0, 0]).
             setPosition([0, 0, 0]);
-        world.add(pointBox1);
+        //world.add(pointBox1);
 
         requestAnimFrame(tick);
       }
 
-      function onMouseClick(event) {
+      function onMouseMoved(event) {
         var coords = getRelativeCoords(event);
-        var mDX = -(coords.x - 750)/1500;
-        var fovPhi = -(coords.y - 375)/750 * Math.PI/4;
-        var fovTheta = mDX * Math.PI/2;
+        var mDX = (coords.x - 750)/750;
+        var mDY = -(coords.y - 375)/750;
+
+
+        var mousePhi = mDY*Math.PI/4;
+        var mouseTheta = mDX*fovx();
 
         var x = camera.position[0];
         var y = camera.position[1];
         var z = camera.position[2];
 
-        var d_i = Math.tan(camera.phi) * z;
-        var dTheta = Math.atan(mDX)
+        var d_c = z / Math.cos(camera.phi + mousePhi);
 
-        var phi = Math.atan(Math.tan(camera.phi)/Math.cos(fovTheta)) + fovPhi;
-        var theta = camera.theta + fovTheta;
 
-        var t = z / Math.cos(phi);
-        var tXY = Math.sin(phi) * t; 
-        
-        var newX = x - tXY * Math.sin(theta);// + 37.5 * Math.cos(theta);
-        var newY = y + tXY * Math.cos(theta);// + 37.5 * Math.sin(theta);
+        var dY = z*Math.tan(camera.phi + mousePhi);
 
-        pointBox1.setPosition([newX, newY, 0]);
-        //ointBox2.setPosition([midX, midY, 0]);
+        var periphery = Math.tan(fovx() / 2) * d_c;
+
+        //var dX1 = -z*Math.tan(camera.theta + mouseTheta)
+        //var dX1 = -z*Math.tan(mDX*fovx())
+        var dX1 = mDX * periphery;
+        var microPhi = Math.atan(dX1/d_c)
+        //var dX2 = Math.tan(microPhi)*dY;
+
+        //var dX2 = -dY * Math.tan(camera.phi * mouseTheta);
+
+        var newY = y + dY;
+
+        pointBox1.setPosition([x + dX1, newY, 0]);
+        pointBox2.setPosition([x + dX1, newY, 0]);
       }
 
       function onKey(event) {
