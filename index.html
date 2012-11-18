@@ -82,6 +82,7 @@
         camera.transform();
         world.applyLights();
         world.draw();
+        if (selectBox) selectBox.draw();
       }
 
       function animate() {
@@ -104,11 +105,13 @@
         animate();
       }
       var pointBox1 = null;
-      var pointBox2 = null;
+      var selectBox = null;
 
       function webGLStart() {
         var canvas = document.getElementById('canvas');
         canvas.addEventListener('mousemove', onMouseMoved, false);
+        canvas.addEventListener('mousedown', onMouseDown, false);
+        canvas.addEventListener('mouseup', onMouseUp, false);
         document.addEventListener('keydown', onKey, true);
         document.addEventListener('keyup', onKey, true);
         gl = GL.createGL(canvas);
@@ -129,23 +132,36 @@
         pointBox1 = new Box([1, 1, 1]).
             setColor([1, 0, 0]).
             setPosition([0, 0, 0]);
-        world.effects.push(pointBox1);
+        //world.effects.push(pointBox1);
 
         requestAnimFrame(tick);
-      }
+      };
+
+      function onMouseDown(event) {
+        var coords = getMouseCoords(event);
+        selectBox = new Cage(coords, coords, camera.theta);
+      };
+
+      function onMouseUp(event) {
+        selectBox = null;
+      };
 
       function onMouseMoved(event) {
-        var coords = getRelativeCoords(event);
-        var mDX = (coords.x - 750)/750;
-        var mDY = -(coords.y - 375)/750;
+        if (!selectBox) return;
+        var coords = getMouseCoords(event);
+        selectBox.setMousePoint4(coords);
+      };
 
+      function getPlanarCoords(screenCoords, planeZ) {
+        var mDX = (screenCoords.x - 750)/750;
+        var mDY = -(screenCoords.y - 375)/750;
 
         var mousePhi = mDY*Math.PI/4;
         var mouseTheta = mDX*fovx();
 
         var x = camera.position[0];
         var y = camera.position[1];
-        var z = camera.position[2];
+        var z = camera.position[2] - planeZ;
 
         var d_c = z / Math.cos(camera.phi + mousePhi);
 
@@ -156,12 +172,12 @@
         var dX1 = mDX * periphery;
         var microPhi = Math.atan(dX1/d_c);
 
-        pointBox1.setPosition([
+        return [
           x + Math.cos(camera.theta)*dX1 - Math.sin(camera.theta)*dY,
           y + Math.sin(camera.theta)*dX1 + Math.cos(camera.theta)*dY,
-          0
-        ]);
-      }
+          planeZ
+        ];
+      };
 
       function onKey(event) {
         switch (event.keyCode) {
@@ -196,7 +212,7 @@
         event.stopPropagation();
       }
 
-      function getRelativeCoords(event) {
+      function getMouseCoords(event) {
         if (event.offsetX) { 
           return {x: event.offsetX, y: event.offsetY}; 
         }

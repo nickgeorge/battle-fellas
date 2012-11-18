@@ -25,6 +25,10 @@ Util.partial = function(fn, var_args) {
   };
 };
 
+Util.sqr = function(x) {
+  return x*x;
+}
+
 Array.prototype.apply = function(fnString, arg) {
   for (var i = 0, elm; elm = this[i]; i++) {
     elm[fnString](arg);

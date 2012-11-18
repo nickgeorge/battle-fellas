@@ -1,11 +1,20 @@
-Box = function(size) {
+Box = function(point1, point2) {
   if (!Box.normalBuffer) Box.initBuffers();
 
+  this.point1 = point1;
+  this.point2 = point2;
+
+  if (!point2) {
+    point2 = Vector.multiply(point1, .5);
+    point1 = Vector.multiply(point2, -1);
+  }
+
+  this.size = Vector.difference(point1, point2);
   this.position = [0, 0, 0];
   this.fulcrum = null;
 
   this.colorBuffer = null;
-  this.vertexBuffer = this.createVertexBuffer(size);
+  this.vertexBuffer = this.createVertexBuffer(point1, point2);
 
   this.theta = 0;
   this.phi = 0;
@@ -127,11 +136,6 @@ Box.initBuffers = function() {
 }
 
 Box.prototype.createVertexBuffer = function(point1, point2) {
-  if (!point2) {
-    point2 = Vector.multiply(point1, .5);
-    point1 = Vector.multiply(point2, -1);
-  }
-  this.size = Vector.difference(point1, point2);
   var vertexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
   var vertices = [

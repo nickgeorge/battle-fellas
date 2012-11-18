@@ -111,17 +111,13 @@ Fella.prototype.draw = function() {
   gl.rotate(this.theta, [0, 0, 1]);
   gl.rotate(this.phi, [0, 1, 0]);
 
-  for (var i = 0, part; part = this.parts[i]; i++) {
-    part.draw();
-  }
+  this.parts.apply("draw");
 
   gl.popMatrix();
 };
 
 Fella.prototype.advanceDead = function(dt) {
-  for (var i = 0, part; part = this.parts[i]; i++) {
-    part.advance(dt);
-  }
+  this.parts.apply("advance", [dt]);
 };
 
 Fella.prototype.setPosition = function(xyz) {
