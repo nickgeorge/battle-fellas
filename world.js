@@ -53,11 +53,11 @@ World.prototype.populate = function() {
   light.setDirectionalColor([.8, .8, .8]);
   this.addLight(light);
 
-  var numFellas = 10;
+  var numFellas = 25;
   var numCrates = 0;
 
   this.board = new Box([100, 200, 1]).
-      setColor([.5, .5, .5]).
+      setColor([.2, .2, .2]).
       setPosition([0, 0, -.5]);
   console.log("this");
   console.log(this.board);
