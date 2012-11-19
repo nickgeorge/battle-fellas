@@ -75,10 +75,10 @@ Cage.prototype.buildParts = function() {
   ];
   var sizes = [
     [
-      .5,
       Math.sqrt(
           Util.sqr(this.planarPoints[0][0] - this.planarPoints[2][0]) +
           Util.sqr(this.planarPoints[0][1] - this.planarPoints[2][1])),
+      .5,
       .5
     ],
     [
@@ -89,10 +89,10 @@ Cage.prototype.buildParts = function() {
       .5
     ],
     [
-      .5,
       Math.sqrt(
           Util.sqr(this.planarPoints[1][0] - this.planarPoints[3][0]) +
           Util.sqr(this.planarPoints[1][1] - this.planarPoints[3][1])),
+      .5,
       .5
     ],
     [
@@ -102,6 +102,12 @@ Cage.prototype.buildParts = function() {
       .5,
       .5
     ],
+  ];
+  var thetas = [
+    Vector.thetaTo(this.planarPoints[0], this.planarPoints[2]),
+    Vector.thetaTo(this.planarPoints[1], this.planarPoints[0]),
+    Vector.thetaTo(this.planarPoints[3], this.planarPoints[1]),
+    Vector.thetaTo(this.planarPoints[2], this.planarPoints[3]),
   ];
   var color = [0, 1, 0];
   this.parts = [];
@@ -115,6 +121,6 @@ Cage.prototype.buildParts = function() {
     this.parts.push(new Box(sizes[i]).
         setPosition(centers[i]).
         setColor([1,0,0]).
-        setTheta(this.theta));
+        setTheta(thetas[i]));
   }
 }
