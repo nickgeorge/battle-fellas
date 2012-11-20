@@ -54,13 +54,11 @@ World.prototype.populate = function() {
   this.addLight(light);
 
   var numFellas = 25;
-  var numCrates = 0;
+  var numCrates = 10;
 
   this.board = new Box([100, 200, 1]).
       setColor([.2, .2, .2]).
       setPosition([0, 0, -.5]);
-  console.log("this");
-  console.log(this.board);
   for (var i = 0; i < numFellas; i++) {
     this.add(new Fella([      
       Math.random()*this.board.size[0] + this.board.min(0),
@@ -76,7 +74,8 @@ World.prototype.populate = function() {
           Math.random()*this.board.size[1] + this.board.min(1),
           5 + Math.random()*10 + this.board.max(2)
         ]).
-        setColor([0, 1, 0]));
+        setColor([1, 1, 1]).
+        setTexture(Media.TEXTURES.CRATE));
   }
 };
 
@@ -103,21 +102,35 @@ World.prototype.checkCollisions = function() {
       if (projectile.parent == thing) continue;
       var d_x = thing.position[0] - projectile.position[0];
       var d_y = thing.position[1] - projectile.position[1];
-      var d_z = thing.position[2]+1.5 - projectile.position[2];
+      var d_z = thing.position[2]+(thing.constructor == Fella ? 1.5 : 0) - projectile.position[2];
       if (d_x < 2 && d_y < 2 && d_z < 2) {
         var d2 = d_x*d_x + d_y*d_y + d_z*d_z;
 
         if (d2 < 1) {
-          thing.alive && this.add(new Fella([1, 1, 1]).
-              setTheta(Math.random() * Math.PI*2).
-              setPosition([
-                Math.random()*this.board.size[0] + this.board.min(0),
-                Math.random()*this.board.size[1] + this.board.min(1),
-                0
-              ]));
-          thing.die();
-          
+          if (thing.alive) {
+            thing.die();
 
+            if (thing.constructor == Fella) {
+              this.add(new Fella().
+                setTheta(Math.random() * Math.PI*2).
+                setPosition([
+                  Math.random()*this.board.size[0] + this.board.min(0),
+                  Math.random()*this.board.size[1] + this.board.min(1),
+                  0
+                ]));
+            }
+            if (thing.constructor == Box) {
+              this.add(new Box([1, 1, 1]).
+                setTheta(Math.random() * Math.PI*2).        
+                setColor([1, 1, 1]).
+                setTexture(Media.TEXTURES.CRATE).
+                setPosition([
+                  Math.random()*this.board.size[0] + this.board.min(0),
+                  Math.random()*this.board.size[1] + this.board.min(1),
+                  Math.random()*10 + 10
+                ]));              
+            }
+          }
         }
       } 
     }

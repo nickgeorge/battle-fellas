@@ -1,4 +1,5 @@
 Thing = function(proto) {
+  !proto && (proto = {});
   this.phi = proto.phi || 0;
   this.theta = proto.theta || 0;
   this.position = proto.position || [0, 0, 0];

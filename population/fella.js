@@ -1,8 +1,9 @@
 Fella = function(xyz, rgb) {
+
+  this.super();
   this.position = xyz;
   this.theta = 0;
-  this.phi = 0;
-
+  //this.phi = 0;
   this.speed = 5;
   this.alive = true;
   this.target = null;
@@ -10,6 +11,7 @@ Fella = function(xyz, rgb) {
 
   this.buildBody(rgb || Vector.randomColor());
 };
+Util.inherits(Fella, Thing);
 
 Fella.MAX_LEG_ANGLE = Util.degToRad(30);
 
@@ -17,9 +19,8 @@ Fella.prototype.advance = function(dt) {
   if (this.alive) {
     if (!this.target || !this.target.alive) this.aquireTarget();
     if (this.target && this.target.alive) {
-      this.theta = Vector.thetaTo(
-        this.position, this.target.position);
-    if (Math.random() < .015) this.shoot();
+      this.theta = Vector.thetaTo(this.position, this.target.position);
+      if (Math.random() < .025) this.shoot();
     }
     this.advanceAlive(dt);
   } else { 
@@ -120,16 +121,6 @@ Fella.prototype.advanceDead = function(dt) {
   this.parts.apply("advance", [dt]);
 };
 
-Fella.prototype.setPosition = function(xyz) {
-  this.position = xyz;
-  return this;
-};
-
-Fella.prototype.setTheta = function(theta) {
-  this.theta = theta;
-  return this;
-};
-
 Fella.prototype.buildBody = function(rgb) {
   this.parts.leftLeg = new Box([.25, .25, 1]).
       setPosition([0, .1875, .5]).
@@ -158,10 +149,10 @@ Fella.prototype.buildBody = function(rgb) {
 Fella.prototype.shoot = function() {
   var d_x = this.target.position[0] - this.position[0];
   var d_y = this.target.position[1] - this.position[1];
-  var d_z = this.target.position[2] - this.position[2];
+  var d_z = this.target.position[2] - this.position[2] - 
+      (this.target.constructor != Fella ? 1.5 : 0);
   var d_xy = Math.sqrt(d_x*d_x + d_y*d_y);
   var s = Arrow.DEFAULT_SPEED;
-
   var a = -world.G * d_xy*d_xy / (2*s*s);
   var b = d_xy;
   var c = a - d_z;

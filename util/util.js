@@ -9,10 +9,10 @@ Util.inherits = function(childCtor, parentCtor) {
   function tempCtor() {};
   tempCtor.prototype = parentCtor.prototype;
   childCtor.superClass_ = parentCtor.prototype;
-  childCtor.prototype.super = parentCtor;
   childCtor.prototype = new tempCtor();
   /** @override */
   childCtor.prototype.constructor = childCtor;
+  childCtor.prototype.super = parentCtor;
 };
 
 Util.partial = function(fn, var_args) {

@@ -62,6 +62,10 @@ ShaderProgram.getShaderProgram = function() {
       shaderProgram, 'aVertexNormal');
   gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
+  shaderProgram.textureCoordAttribute = gl.getAttribLocation(
+      shaderProgram, 'aTextureCoord');
+  gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute); 
+
   shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, 'uPMatrix');
   shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, 'uMVMatrix');
   shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
@@ -71,6 +75,8 @@ ShaderProgram.getShaderProgram = function() {
       shaderProgram, "uLightingDirection");
   shaderProgram.directionalColorUniform = gl.getUniformLocation(
       shaderProgram, "uDirectionalColor");
+  shaderProgram.useTextureUniform = gl.getUniformLocation(
+      shaderProgram, "uUseTexture");
 
   return shaderProgram;
 }
