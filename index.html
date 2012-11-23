@@ -14,6 +14,8 @@
     <script type='text/javascript' src='population/sphere.js'></script>
     <script type='text/javascript' src='population/arrow.js'></script>
     <script type='text/javascript' src='population/fella.js'></script>
+    <script type='text/javascript' src='effects/image_cross.js'></script>
+    <script type='text/javascript' src='effects/double_explosion.js'></script>
     <script type='text/javascript' src='media/media.js'></script>
     <script type='text/javascript' src='ui/cage.js'></script>
     <script type='text/javascript' src='world.js'></script>
@@ -26,13 +28,13 @@
       varying vec2 vTextureCoord;
       varying vec4 vColor;
       varying vec3 vLightWeighting;
-
-      uniform sampler2D uSampler;
+      
       uniform bool uUseTexture;
+      uniform sampler2D uSampler;
 
       void main(void) {
         vec4 textureColor;
-        if (uUseTexture) {
+        if (uUseTexture && vTextureCoord.s > -.1) {
           textureColor = texture2D(uSampler, vTextureCoord);
         } else { 
           textureColor = vec4(1, 1, 1, 1);
@@ -47,6 +49,8 @@
       attribute vec4 aVertexColor;
       attribute vec2 aTextureCoord;
 
+      uniform vec3 uScale;
+
       uniform mat4 uMVMatrix;
       uniform mat4 uPMatrix;
       uniform mat3 uNMatrix;
@@ -60,7 +64,8 @@
       varying vec3 vLightWeighting;
 
       void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        gl_Position = uPMatrix * uMVMatrix * 
+            vec4(aVertexPosition * uScale, 1.0);
         vTextureCoord = aTextureCoord;
 
         vec3 transformedNormal = uNMatrix * aVertexNormal;
@@ -104,7 +109,7 @@
         var timeNow = new Date().getTime();
         if (framerate.lastTime != 0) {
           var elapsed = timeNow - framerate.lastTime;
-          if (elapsed < 40) {
+          if (elapsed < 100) {
             var dt = elapsed/1000;
             camera.advance(dt)
             world.advance(dt);
@@ -136,18 +141,20 @@
 
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+        gl.cullFace(gl.BACK);
 
         world = new World();
         world.populate();
         framerate = new Framerate('framerate');
 
         camera = new Camera();
-        camera.setPosition([-0, -50, 30]);
-        camera.phi = Math.PI/4;
+        camera.setPosition([-0, -50, 2.125]);
+        camera.phi = Math.PI/2;
 
-        pointBox1 = new Box([1, 1, 1]).
-            setColor([1, 0, 0]).
-            setPosition([0, 0, 0]);
+        // pointBox1 = new Box([1, 1, 1]).
+        //     setColor([1, 0, 0]).
+        //     setPosition([0, 0, 0]);
 
         requestAnimFrame(tick);
       };
@@ -171,8 +178,8 @@
         var mDX = (screenCoords.x - 750)/1500;
         var mDY = (screenCoords.y - 375)/750;
 
-        var mousePhi = -mDY*pi/4;
-        var mouseTheta = 2*mDX*fovx(pi/4, 2);
+        var mousePhi = mDY*pi/4;
+        var mouseTheta = -2*mDX*fovx(pi/4, 2);
 
         var x = camera.position[0];
         var y = camera.position[1];

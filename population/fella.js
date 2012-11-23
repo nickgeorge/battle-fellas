@@ -4,7 +4,7 @@ Fella = function(xyz, rgb) {
   this.position = xyz;
   this.theta = 0;
   //this.phi = 0;
-  this.speed = 5;
+  this.speed = Fella.SPEED;
   this.alive = true;
   this.target = null;
   this.parts = [];
@@ -13,6 +13,7 @@ Fella = function(xyz, rgb) {
 };
 Util.inherits(Fella, Thing);
 
+Fella.SPEED = 5;
 Fella.MAX_LEG_ANGLE = Util.degToRad(30);
 
 Fella.prototype.advance = function(dt) {
@@ -91,12 +92,15 @@ Fella.prototype.die = function() {
     part.vZ = Math.random()*6;
     part.bodyPosition = this.position;
     part.advance = function(dt) {
-      if (this.position[2] > 0 || !world.inBounds(
+      if (this.position[2] > this.size[2]/2.1 || !world.inBounds(
           this.bodyPosition)) {
         this.position[0] += this.vX*dt;
         this.position[1] += this.vY*dt;
         this.position[2] += this.vZ*dt;
-        this.vZ -= 12*dt;
+        if (this.position[2] < this.size[2]/2.1) {
+          this.position[2] = this.size[2]/2.1
+        }
+        this.vZ -= world.G*dt;
       }
     }
   }
@@ -108,9 +112,7 @@ Fella.prototype.die = function() {
 Fella.prototype.draw = function() {
   gl.pushMatrix();
 
-  gl.translate(this.position);
-  gl.rotate(this.theta, [0, 0, 1]);
-  gl.rotate(this.phi, [0, 1, 0]);
+  this.transform();
 
   this.parts.apply("draw");
 
@@ -132,7 +134,11 @@ Fella.prototype.buildBody = function(rgb) {
       setFulcrum([0, 0, .5]);
   this.parts.head = new Box([.5, .5, .5]).
       setPosition([0, 0, 2.125]).
-      setColor(rgb);
+      setColor(rgb).
+      setTexture(Media.TEXTURES.THWOMP).
+      createTextureBuffer({
+        front: [0, 1, 0, 1]
+      });
   this.parts.torso = new Box([.3, .75, 1]).
       setPosition([0, 0, 1.5]).
       setColor(rgb);
@@ -176,4 +182,8 @@ Fella.prototype.shoot = function() {
       setPhi(phi);
 
   world.projectiles.push(shot);
+};
+
+Fella.prototype.dispose = function() {
+  this.parts.apply('dispose');
 };

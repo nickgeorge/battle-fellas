@@ -49,5 +49,12 @@ GL.createGL = function(canvas) {
   gl.translate = function(xyz) {
     mat4.translate(gl.mvMatrix, xyz);
   };
+
+  gl.scale = function(xyz) {
+    gl.uniform3fv(this.scaleUniform, xyz); 
+  };
+
+  //gl.reset = function() {}
+
   return gl;
 }

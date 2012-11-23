@@ -9,7 +9,13 @@ Media.bindTexture = function(texture) {
 };
 
 Media.initTextures = function() {
-  Media.TEXTURES.CRATE = Media.initTexture("media/crate.png");
+  Media.TEXTURES = {
+    CRATE: Media.initTexture('media/crate.png'),
+    THWOMP: Media.initTexture('media/thwomp_small.png'),
+    GRASS: Media.initTexture('media/grass.png'),
+    SPARK: Media.initTexture('media/spark.png'),
+    ENERGY: Media.initTexture('media/energybw.png')
+  };
 };
 
 Media.initTexture = function(src) {

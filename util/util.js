@@ -29,9 +29,9 @@ Util.sqr = function(x) {
   return x*x;
 }
 
-Array.prototype.apply = function(fnString, arg) {
+Array.prototype.apply = function(fnString, arg1, arg2, arg3) {
   for (var i = 0, elm; elm = this[i]; i++) {
-    elm[fnString](arg);
+    elm[fnString](arg1, arg2, arg3);
   }
 };
 

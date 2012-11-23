@@ -1,5 +1,8 @@
 ShaderProgram = function() {}
 
+ShaderProgram.USE_TEXTURE_DEFAULT = false;
+ShaderProgram.SCALE_DEFAULT = [1, 1, 1];
+
 ShaderProgram.getShader = function(gl, id) {
   var shaderScript = document.getElementById(id);
   if (!shaderScript) {
@@ -33,7 +36,7 @@ ShaderProgram.getShader = function(gl, id) {
   }
 
   return shader;
-}
+};
 
 ShaderProgram.getShaderProgram = function() {
   var shaderProgram = gl.createProgram();
@@ -77,6 +80,18 @@ ShaderProgram.getShaderProgram = function() {
       shaderProgram, "uDirectionalColor");
   shaderProgram.useTextureUniform = gl.getUniformLocation(
       shaderProgram, "uUseTexture");
+  shaderProgram.scaleUniform = gl.getUniformLocation(
+      shaderProgram, "uScale");
+  
+  console.log(shaderProgram);
+  shaderProgram.reset = ShaderProgram.prototype.reset;
+  shaderProgram.reset();
 
   return shaderProgram;
-}
+};
+
+ShaderProgram.prototype.reset = function() {
+  gl.uniform1i(this.useTextureUniform, false);
+  gl.uniform1i(this.useTextureUniform, ShaderProgram.USE_TEXTURE_DEFAULT); 
+  gl.uniform3fv(this.scaleUniform, ShaderProgram.SCALE_DEFAULT); 
+};

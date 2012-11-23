@@ -3,7 +3,7 @@ Thing = function(proto) {
   this.phi = proto.phi || 0;
   this.theta = proto.theta || 0;
   this.position = proto.position || [0, 0, 0];
-  this.fulcrum = proto.fulcrum || null;;
+  this.fulcrum = proto.fulcrum || null;
   this.color = proto.color || [0, 0, 0, 0];
 }
 
@@ -49,4 +49,10 @@ Thing.prototype.draw = function() {
 Thing.prototype.advance = function() {
   throw "Advance unimplemented for type " +
       typeof this;
+};
+
+Thing.prototype.transform = function() {
+  gl.translate(this.position);
+  gl.rotate(this.theta, [0, 0, 1]);
+  gl.rotate(this.phi, [0, 1, 0]);
 };
