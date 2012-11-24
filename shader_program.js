@@ -2,6 +2,7 @@ ShaderProgram = function() {}
 
 ShaderProgram.USE_TEXTURE_DEFAULT = false;
 ShaderProgram.SCALE_DEFAULT = [1, 1, 1];
+ShaderProgram.COLOR_OVERRIDE_DEFAULT = [-1, -1, -1, -1];
 
 ShaderProgram.getShader = function(gl, id) {
   var shaderScript = document.getElementById(id);
@@ -78,6 +79,8 @@ ShaderProgram.getShaderProgram = function() {
       shaderProgram, "uLightingDirection");
   shaderProgram.directionalColorUniform = gl.getUniformLocation(
       shaderProgram, "uDirectionalColor");
+  shaderProgram.colorOverrideUniform = gl.getUniformLocation(
+      shaderProgram, "uColorOverride");
   shaderProgram.useTextureUniform = gl.getUniformLocation(
       shaderProgram, "uUseTexture");
   shaderProgram.scaleUniform = gl.getUniformLocation(
@@ -94,4 +97,5 @@ ShaderProgram.prototype.reset = function() {
   gl.uniform1i(this.useTextureUniform, false);
   gl.uniform1i(this.useTextureUniform, ShaderProgram.USE_TEXTURE_DEFAULT); 
   gl.uniform3fv(this.scaleUniform, ShaderProgram.SCALE_DEFAULT); 
+  gl.uniform4fv(this.colorOverrideUniform, ShaderProgram.COLOR_OVERRIDE_DEFAULT);
 };

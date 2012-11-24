@@ -14,7 +14,8 @@ Media.initTextures = function() {
     THWOMP: Media.initTexture('media/thwomp_small.png'),
     GRASS: Media.initTexture('media/grass.png'),
     SPARK: Media.initTexture('media/spark.png'),
-    ENERGY: Media.initTexture('media/energybw.png')
+    ENERGY: Media.initTexture('media/energybw.png'),
+    QUESTION: Media.initTexture('media/question.png')
   };
 };
 

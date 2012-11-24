@@ -19,6 +19,13 @@ Vector.thetaTo = function(v1, v2) {
   return Math.atan2(v2[1] - v1[1], v2[0] - v1[0]);
 };
 
+Vector.phiTo = function(v1, v2) {
+  var diff = Vector.difference(v1, v2);
+  var d_ground = Math.sqrt(Util.sqr(diff[0]) + Util.sqr(diff[1]));
+
+  return Math.atan2(d_ground, diff[2]);
+};
+
 Vector.multiply = function(v, c) {
   return [c*v[0], c*v[1], c*v[2]];
 };

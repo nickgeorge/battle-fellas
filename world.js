@@ -7,9 +7,11 @@ World = function() {
   this.rotSpeed = 0;
   this.board = null;
   this.G = 30;
+  this.clearColorRgba = [0, 0, 0, 1];
 
   this.thingsToRemove = [];
   this.effectsToRemove = [];
+  this.projectilesToRemove = [];
 };
 
 World.prototype.add = function(thing) {
@@ -18,10 +20,10 @@ World.prototype.add = function(thing) {
 
 World.prototype.draw = function() {
   mat4.rotate(gl.mvMatrix, this.theta, [0, 0, 1]);
-  this.board.draw();
   this.effects.apply("draw");
   this.projectiles.apply("draw");
   this.things.apply("draw");
+  this.board.draw();
 };
 
 World.prototype.advance = function(dt) {
@@ -53,8 +55,9 @@ World.prototype.populate = function() {
   light.setDirectionalColor([.8, .8, .8]);
   this.addLight(light);
 
-  var numFellas = 25;
-  var numCrates = 10;
+  var numFellas = 10;
+  var numDumbCrates = 10;
+  var numSmartCrates = 10;
 
   this.board = new Box([100, 200, 1]).
       setColor([1, 1, 1]).
@@ -65,22 +68,13 @@ World.prototype.populate = function() {
       });
 
   for (var i = 0; i < numFellas; i++) {
-    this.add(new Fella([      
-      Math.random()*this.board.size[0] + this.board.min(0),
-      Math.random()*this.board.size[1] + this.board.min(1),
-      0
-    ]).setTheta(i*Math.PI*2/numFellas));
+    this.add(Fella.newRandom());
   }
-  for (var i = 0; i < numCrates; i++) {
-    this.add(new Box([1, 1, 1]).
-        setTheta(Math.random() * Math.PI*2).
-        setPosition([
-          Math.random()*this.board.size[0] + this.board.min(0),
-          Math.random()*this.board.size[1] + this.board.min(1),
-          5 + Math.random()*10 + this.board.max(2)
-        ]).
-        setColor([1, 1, 1]).
-        setTexture(Media.TEXTURES.CRATE, true));
+  for (var i = 0; i < numDumbCrates; i++) {
+    this.add(DumbCrate.newRandom());
+  }
+  for (var i = 0; i < numSmartCrates; i++) {
+    this.add(SmartCrate.newRandom());
   }
 };
 
@@ -98,7 +92,13 @@ World.prototype.addAndRemoveThings = function() {
     this.effects.remove(effect);
     effect = null;
   }
+  for (var i = 0, projectile; projectile = this.projectilesToRemove[i]; i++) {
+    this.projectiles.remove(projectile);
+    projectile = null;
+  }
+  this.thingsToRemove = [];
   this.effectsToRemove = [];
+  this.projectilesToRemove = [];
 };
 
 World.prototype.checkCollisions = function() {
@@ -114,31 +114,8 @@ World.prototype.checkCollisions = function() {
         if (d2 < 1) {
           if (thing.alive) {
             thing.die();
-
-            if (thing.constructor == Fella) {
-              this.effects.push(new DoubleExplosion(.25, [1, 1, 0], [1, 1, 1]).
-                  setPosition(projectile.position));
-              this.add(new Fella().
-                setTheta(Math.random() * Math.PI*2).
-                setPosition([
-                  Math.random()*this.board.size[0] + this.board.min(0),
-                  Math.random()*this.board.size[1] + this.board.min(1),
-                  0
-                ]));
-            }
-            if (thing.constructor == Box) {
-              this.effects.push(new DoubleExplosion(1).
-                  setPosition(thing.position));
-              this.add(new Box([1, 1, 1]).
-                setTheta(Math.random() * Math.PI*2).        
-                setColor([1, 1, 1]).
-                setTexture(Media.TEXTURES.CRATE, true).
-                setPosition([
-                  Math.random()*this.board.size[0] + this.board.min(0),
-                  Math.random()*this.board.size[1] + this.board.min(1),
-                  Math.random()*10 + 10
-                ]));              
-            }
+            projectile.detonate();
+            this.add(thing.constructor.newRandom());
           }
         }
       } 

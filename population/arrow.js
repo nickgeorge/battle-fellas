@@ -1,6 +1,5 @@
 Arrow = function(parent, speed) {
-  this.theta = 0;
-  this.phi = 0;
+  this.super();
   this.speed = speed;
   this.parent = parent;
   this.position = [0, 0, 0];
@@ -46,4 +45,10 @@ Arrow.prototype.active = function() {
 
 Arrow.prototype.dispose = function() {
   this.shaft.dispose();
+};
+
+Arrow.prototype.detonate = function() {
+  world.effects.push(new DoubleExplosion(.25, [1, 1, 0], [1, 1, 1]).
+      setPosition(this.position));
+  world.projectilesToRemove.push(this); 
 };

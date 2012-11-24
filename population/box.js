@@ -131,13 +131,6 @@ Box.prototype.setTexture = function(texture, opt_buildBuffer) {
   return this;
 };
 
-Box.prototype.die = function() {
-  //world.thingsToRemove.push(this);
-  this.setColor([1, 1, 1]);
-  this.texture = null;
-  this.alive = false;
-};
-
 Box.prototype.createVertexBuffer = function(point1, point2) {
   this.vertexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);

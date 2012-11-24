@@ -56,3 +56,21 @@ Thing.prototype.transform = function() {
   gl.rotate(this.theta, [0, 0, 1]);
   gl.rotate(this.phi, [0, 1, 0]);
 };
+
+Thing.prototype.getClosestThing = function(alive) {
+  var minDistance = Number.MAX_VALUE;
+  var closestThing = null;
+  for (var i = 0, thing; thing = world.things[i]; i++) {
+    if (!thing.alive || this == thing) continue;
+    var d = Vector.distanceSquared(this.position, thing.position);
+    if (d < minDistance) {
+      minDistance = d;
+      closestThing = thing;
+    }
+  }
+  return closestThing;
+};
+
+Thing.prototype.center = function() {
+  return this.position;
+};

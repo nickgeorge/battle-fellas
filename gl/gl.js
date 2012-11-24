@@ -13,7 +13,6 @@ GL.createGL = function(canvas) {
   gl.stack = [];
   gl.stackIndex = -1;
   
-  gl.clearColorRgba = [0, 0, 0, 1];
   gl.normalMatrix = mat3.create();
 
   gl.pushMatrix = function() {

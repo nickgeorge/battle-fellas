@@ -13,9 +13,12 @@
     <script type='text/javascript' src='population/box.js'></script>
     <script type='text/javascript' src='population/sphere.js'></script>
     <script type='text/javascript' src='population/arrow.js'></script>
+    <script type='text/javascript' src='population/dumb_crate.js'></script>
+    <script type='text/javascript' src='population/smart_crate.js'></script>
     <script type='text/javascript' src='population/fella.js'></script>
     <script type='text/javascript' src='effects/image_cross.js'></script>
     <script type='text/javascript' src='effects/double_explosion.js'></script>
+    <script type='text/javascript' src='population/fireball.js'></script>
     <script type='text/javascript' src='media/media.js'></script>
     <script type='text/javascript' src='ui/cage.js'></script>
     <script type='text/javascript' src='world.js'></script>
@@ -34,7 +37,7 @@
 
       void main(void) {
         vec4 textureColor;
-        if (uUseTexture && vTextureCoord.s > -.1) {
+        if (uUseTexture && vTextureCoord.s > -.5) {
           textureColor = texture2D(uSampler, vTextureCoord);
         } else { 
           textureColor = vec4(1, 1, 1, 1);
@@ -58,6 +61,7 @@
       uniform vec3 uAmbientColor;
       uniform vec3 uLightingDirection;
       uniform vec3 uDirectionalColor;
+      uniform vec4 uColorOverride;
 
       varying vec2 vTextureCoord;
       varying vec4 vColor;
@@ -75,7 +79,8 @@
         vLightWeighting = 
             uAmbientColor + uDirectionalColor * directionalLightWeighting;
         
-        vColor = aVertexColor;
+        if (uColorOverride[0] > -.5) vColor = uColorOverride;
+        else vColor = aVertexColor;
       }
     </script>
 
@@ -94,7 +99,7 @@
 
       function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clearColor(gl.clearColorRgba[0], gl.clearColorRgba[1], gl.clearColorRgba[2], 1.0);
+        gl.clearColor(world.clearColorRgba[0], world.clearColorRgba[1], world.clearColorRgba[2], 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         mat4.perspective(45, gl.viewportWidth/gl.viewportHeight,
             0.1, 1000.0, gl.pMatrix);
@@ -124,11 +129,12 @@
         drawScene();
         animate();
       }
-      var pointBox1 = null;
       var selectBox = null;
 
       function webGLStart() {
         var canvas = document.getElementById('canvas');
+        canvas.width = document.width;
+        canvas.height = document.height;
         canvas.addEventListener('mousemove', onMouseMoved, false);
         canvas.addEventListener('mousedown', onMouseDown, false);
         canvas.addEventListener('mouseup', onMouseUp, false);
@@ -151,10 +157,6 @@
         camera = new Camera();
         camera.setPosition([-0, -50, 2.125]);
         camera.phi = Math.PI/2;
-
-        // pointBox1 = new Box([1, 1, 1]).
-        //     setColor([1, 0, 0]).
-        //     setPosition([0, 0, 0]);
 
         requestAnimFrame(tick);
       };
@@ -256,11 +258,12 @@
     </script>
   </head>
 
-  <body onload='webGLStart();'>
-    <canvas id='canvas' style='border: none;' width='1500' height='750'>
-      Get a real browser.
-    </canvas>
+  <body onload='webGLStart();' style='margin: 0px'>
+    <canvas id='canvas' style='border: none;'>
+
     <div id='framerate'></div>
+      Your browser does not support web gl. You know what's awesome? Chrome
+    </canvas>
   </body>
 
 </html>
