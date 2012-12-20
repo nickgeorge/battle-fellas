@@ -16,10 +16,11 @@
     <script type='text/javascript' src='population/dumb_crate.js'></script>
     <script type='text/javascript' src='population/smart_crate.js'></script>
     <script type='text/javascript' src='population/fella.js'></script>
+    <script type='text/javascript' src='population/hero.js'></script>
     <script type='text/javascript' src='effects/image_cross.js'></script>
     <script type='text/javascript' src='effects/double_explosion.js'></script>
     <script type='text/javascript' src='population/fireball.js'></script>
-    <script type='text/javascript' src='media/media.js'></script>
+    <script type='text/javascript' src='media/image_manager.js'></script>
     <script type='text/javascript' src='ui/cage.js'></script>
     <script type='text/javascript' src='world.js'></script>
     <script type='text/javascript' src='camera.js'></script>
@@ -39,10 +40,14 @@
         vec4 textureColor;
         if (uUseTexture && vTextureCoord.s > -.5) {
           textureColor = texture2D(uSampler, vTextureCoord);
-        } else { 
-          textureColor = vec4(1, 1, 1, 1);
+          gl_FragColor = vec4(
+              textureColor.rgb * vColor.rgb  * vLightWeighting,
+              textureColor.a);
+        } else {
+          gl_FragColor = vec4(
+              vColor.rgb  * vLightWeighting,
+              vColor.a);
         }
-        gl_FragColor = vec4(textureColor.rgb * vColor.rgb  * vLightWeighting, vColor.a);
       }
     </script>
 
@@ -143,11 +148,12 @@
         gl = GL.createGL(canvas);
         shaderProgram = ShaderProgram.getShaderProgram();
         initBuffers();
-        Media.initTextures();
+        ImageManager.initTextures();
 
         gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND)
         gl.enable(gl.CULL_FACE);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         gl.cullFace(gl.BACK);
 
         world = new World();

@@ -52,7 +52,7 @@ Box.prototype.render = function() {
   if (this.texture) {
     if (!this.texture.loaded) return;
     gl.uniform1i(shaderProgram.useTextureUniform, true);
-    Media.bindTexture(this.texture);
+    ImageManager.bindTexture(this.texture);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, this.textureBuffer.itemSize, gl.FLOAT, false, 0, 0);
   };

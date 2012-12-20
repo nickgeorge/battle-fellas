@@ -1,9 +1,9 @@
 Fella = function(xyz, rgb) {
 
-  this.super();
+  Util.base(this);
   this.position = xyz;
   this.theta = 0;
-  //this.phi = 0;
+  this.phi = 0;
   this.speed = Fella.SPEED;
   this.alive = true;
   this.target = null;
@@ -30,7 +30,8 @@ Fella.prototype.advance = function(dt) {
 };
 
 Fella.prototype.aquireTarget = function() {
-  this.target = this.getClosestThing(true);
+  //this.target = this.getClosestThing(true);
+  this.target = world.theOne;
 };
 
 
@@ -122,7 +123,7 @@ Fella.prototype.buildBody = function(rgb) {
   this.parts.head = new Box([.5, .5, .5]).
       setPosition([0, 0, 2.125]).
       setColor(rgb).
-      setTexture(Media.TEXTURES.THWOMP).
+      setTexture(ImageManager.TEXTURES.THWOMP).
       createTextureBuffer({
         front: [0, 1, 0, 1]
       });
@@ -140,10 +141,11 @@ Fella.prototype.buildBody = function(rgb) {
 };
 
 Fella.prototype.shoot = function() {
-  var d_x = this.target.position[0] - this.position[0];
-  var d_y = this.target.position[1] - this.position[1];
-  var d_z = this.target.position[2] - this.position[2] - 
-      (this.target.constructor != Fella ? 1.5 : 0);
+  var thisCenter = this.center();
+  var targetCenter = this.target.center();
+  var d_x = targetCenter[0] - thisCenter[0];
+  var d_y = targetCenter[1] - thisCenter[1];
+  var d_z = targetCenter[2] - thisCenter[2];
   var d_xy = Math.sqrt(d_x*d_x + d_y*d_y);
   var s = Arrow.DEFAULT_SPEED;
   var a = -world.G * d_xy*d_xy / (2*s*s);
@@ -162,7 +164,6 @@ Fella.prototype.shoot = function() {
     s_xy*Math.sin(theta),
     -s*Math.sin(phi)
   ];
-  // console.log ( a + " : " + b + " : " + c + " : " + phi + " : " + theta);
   var shot = new Arrow(this, v_shot).
       setPosition([this.position[0], this.position[1], 1.5]).
       setTheta(theta).
@@ -182,9 +183,9 @@ Fella.newRandom = function() {
         Math.random()*world.board.size[0] + world.board.min(0),
         Math.random()*world.board.size[1] + world.board.min(1),
         0
-      ])
+      ]);
 };
 
 Fella.prototype.center = function() {
-  return [this.position[0], this.position[1], this.position[2] + 1.5];
+  return [this.position[0], this.position[1], this.position[2] + 2];
 };

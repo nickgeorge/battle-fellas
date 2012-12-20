@@ -1,4 +1,4 @@
-World = function() {
+World = function(theOne) {
   this.things = [];
   this.projectiles = [];
   this.effects = [];
@@ -8,6 +8,8 @@ World = function() {
   this.board = null;
   this.G = 30;
   this.clearColorRgba = [0, 0, 0, 1];
+
+  this.theOne = theOne;
 
   this.thingsToRemove = [];
   this.effectsToRemove = [];
@@ -20,10 +22,10 @@ World.prototype.add = function(thing) {
 
 World.prototype.draw = function() {
   mat4.rotate(gl.mvMatrix, this.theta, [0, 0, 1]);
+  this.board.draw();
+  this.things.apply("draw");
   this.effects.apply("draw");
   this.projectiles.apply("draw");
-  this.things.apply("draw");
-  this.board.draw();
 };
 
 World.prototype.advance = function(dt) {
@@ -55,14 +57,16 @@ World.prototype.populate = function() {
   light.setDirectionalColor([.8, .8, .8]);
   this.addLight(light);
 
-  var numFellas = 10;
-  var numDumbCrates = 10;
-  var numSmartCrates = 10;
+  var numFellas = 1;
+  var numDumbCrates = 0;
+  var numSmartCrates = 0;
+
+  var isPlayer = true;
 
   this.board = new Box([100, 200, 1]).
       setColor([1, 1, 1]).
       setPosition([0, 0, -.5]).
-      setTexture(Media.TEXTURES.GRASS).
+      setTexture(ImageManager.TEXTURES.GRASS).
       createTextureBuffer({
         top: [0, 15, 0, 30]
       });
@@ -76,6 +80,13 @@ World.prototype.populate = function() {
   for (var i = 0; i < numSmartCrates; i++) {
     this.add(SmartCrate.newRandom());
   }
+
+  if (isPlayer && !(this.theOne && this.theOne.alive)) {
+    this.theOne = Hero.newRandom();
+    this.add(this.theOne);
+  }
+
+  this.effects.push(new ImageCross([1,1,1]).setTexture(ImageManager.TEXTURES.SPARK, true))
 };
 
 World.prototype.inBounds = function(xyz) {
@@ -105,9 +116,11 @@ World.prototype.checkCollisions = function() {
   for (var i = 0, projectile; projectile = this.projectiles[i]; i++) {
     for (var j = 0, thing; thing = this.things[j]; j++) {
       if (projectile.parent == thing) continue;
-      var d_x = thing.position[0] - projectile.position[0];
-      var d_y = thing.position[1] - projectile.position[1];
-      var d_z = thing.position[2]+(thing.constructor == Fella ? 1.5 : 0) - projectile.position[2];
+      var thingCenter = thing.center();
+      var projectileCenter = projectile.center();
+      var d_x = thingCenter[0] - projectileCenter[0];
+      var d_y = thingCenter[1] - projectileCenter[1];
+      var d_z = thingCenter[2] - projectileCenter[2];
       if (d_x < 2 && d_y < 2 && d_z < 2) {
         var d2 = d_x*d_x + d_y*d_y + d_z*d_z;
 
