@@ -17,11 +17,14 @@
     <script type='text/javascript' src='population/smart_crate.js'></script>
     <script type='text/javascript' src='population/fella.js'></script>
     <script type='text/javascript' src='population/hero.js'></script>
+    <script type='text/javascript' src='population/board.js'></script>
     <script type='text/javascript' src='effects/image_cross.js'></script>
     <script type='text/javascript' src='effects/double_explosion.js'></script>
     <script type='text/javascript' src='population/fireball.js'></script>
     <script type='text/javascript' src='media/image_manager.js'></script>
+    <script type='text/javascript' src='input/hero_key_listener.js'></script>
     <script type='text/javascript' src='ui/cage.js'></script>
+    <script type='text/javascript' src='ui/crosshair.js'></script>
     <script type='text/javascript' src='world.js'></script>
     <script type='text/javascript' src='camera.js'></script>
     <script type='text/javascript' src='shader_program.js'></script>
@@ -68,6 +71,8 @@
       uniform vec3 uDirectionalColor;
       uniform vec4 uColorOverride;
 
+      uniform bool uUseLighting;
+
       varying vec2 vTextureCoord;
       varying vec4 vColor;
       varying vec3 vLightWeighting;
@@ -81,38 +86,48 @@
         float directionalLightWeighting = max(
             dot(transformedNormal, uLightingDirection),
             0.0);
-        vLightWeighting = 
-            uAmbientColor + uDirectionalColor * directionalLightWeighting;
-        
+
+        if (!uUseLighting) {
+          vLightWeighting = vec3(1.0, 1.0, 1.0);
+        } else {
+          vLightWeighting = 
+              uAmbientColor + uDirectionalColor * directionalLightWeighting;
+        }
         if (uColorOverride[0] > -.5) vColor = uColorOverride;
         else vColor = aVertexColor;
       }
     </script>
 
     <script type='text/javascript'>
-
+    
       var world = null;
       var camera = null;
+      var crosshair = null;
+      var isPlayer = true;
       var gl = null;
       var shaderProgram = null;
       var framerate = null;
-      var pi = Math.PI;
-
-      function initBuffers() {
-        Box.initBuffers();
-      }
 
       function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clearColor(world.clearColorRgba[0], world.clearColorRgba[1], world.clearColorRgba[2], 1.0);
+        gl.clearColor(world.clearColorRgba[0], 
+            world.clearColorRgba[1], 
+            world.clearColorRgba[2], 
+            1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         mat4.perspective(45, gl.viewportWidth/gl.viewportHeight,
             0.1, 1000.0, gl.pMatrix);
 
-        camera.transform();
+        mat4.identity(gl.mvMatrix);
+        shaderProgram.reset();
+
         world.applyLights();
+
+        crosshair.draw();
+        boxhair.draw();
+        camera.transform();
+
         world.draw();
-        if (selectBox) selectBox.draw();
       }
 
       function animate() {
@@ -134,20 +149,17 @@
         drawScene();
         animate();
       }
-      var selectBox = null;
 
       function webGLStart() {
         var canvas = document.getElementById('canvas');
         canvas.width = document.width;
         canvas.height = document.height;
-        canvas.addEventListener('mousemove', onMouseMoved, false);
-        canvas.addEventListener('mousedown', onMouseDown, false);
-        canvas.addEventListener('mouseup', onMouseUp, false);
-        document.addEventListener('keydown', onKey, true);
-        document.addEventListener('keyup', onKey, true);
+        document.addEventListener(
+            'keydown', HeroKeyListener.onKey, true);
+        document.addEventListener(
+            'keyup', HeroKeyListener.onKey, true);
         gl = GL.createGL(canvas);
         shaderProgram = ShaderProgram.getShaderProgram();
-        initBuffers();
         ImageManager.initTextures();
 
         gl.enable(gl.DEPTH_TEST);
@@ -164,111 +176,18 @@
         camera.setPosition([-0, -50, 2.125]);
         camera.phi = Math.PI/2;
 
+        crosshair = new Crosshair();
+        boxhair = new Box([1, 1, 1]).setColor([1,1,1]);
+
         requestAnimFrame(tick);
       };
-
-      function onMouseDown(event) {
-        var coords = getMouseCoords(event);
-        selectBox = new Cage(coords, coords, camera.theta);
-      };
-
-      function onMouseUp(event) {
-        selectBox = null;
-      };
-
-      function onMouseMoved(event) {
-        if (!selectBox) return;
-        var coords = getMouseCoords(event);
-        selectBox.setMousePoint4(coords);
-      };
-
-      function getPlanarCoords(screenCoords, planeZ) {
-        var mDX = (screenCoords.x - 750)/1500;
-        var mDY = (screenCoords.y - 375)/750;
-
-        var mousePhi = mDY*pi/4;
-        var mouseTheta = -2*mDX*fovx(pi/4, 2);
-
-        var x = camera.position[0];
-        var y = camera.position[1];
-        var z = camera.position[2] - planeZ;
-
-        var d_c = z / Math.cos(camera.phi);
-
-        var periphery = Math.tan(fovx(pi/4, 2) / 2) * d_c;
-
-        var dX1 = mDX * periphery * 2;
-
-        var dY = z*Math.tan(camera.phi + mousePhi);
-
-
-        var dY_m = dY - z*Math.tan(camera.phi);
-        var dX2 = Math.sin(mouseTheta/2)*dY_m;
-
-        var dX = dX1 + dX2;
-        return [
-          x + Math.cos(camera.theta)*dX - Math.sin(camera.theta)*dY,
-          y + Math.sin(camera.theta)*dX + Math.cos(camera.theta)*dY,
-          planeZ
-        ];
-      };
-
-      function onKey(event) {
-        switch (event.keyCode) {
-          case 65: 
-            camera.vX = event.type == 'keydown' ? -camera.vRMag : 0;
-            break;
-          case 87: 
-            camera.vY = event.type == 'keydown' ? camera.vRMag : 0;
-            break;
-          case 68: 
-            camera.vX = event.type == 'keydown' ? camera.vRMag : 0;
-            break;
-          case 83: 
-            camera.vY = event.type == 'keydown' ? -camera.vRMag : 0;
-            break;
-          case 38: 
-            camera.vPhi = event.type == 'keydown' ? camera.vPhiMag : 0;
-            break;
-          case 40: 
-            camera.vPhi = event.type == 'keydown' ? -camera.vPhiMag : 0;
-            break;
-          case 37: 
-            camera.vTheta = event.type == 'keydown' ? camera.vThetaMag : 0;
-            break;
-          case 39: 
-            camera.vTheta = event.type == 'keydown' ? -camera.vThetaMag : 0;
-            break;
-          default: 
-            return;
-        }
-        event.preventDefault();
-        event.stopPropagation();
-      }
-
-      function getMouseCoords(event) {
-        if (event.offsetX) { 
-          return {x: event.offsetX, y: event.offsetY}; 
-        }
-        return {x: event.layerX, y: event.layerY};
-      }      
-
-      function fovx(verticalFOV, aspectRatio) {
-        var halfVerticalFOV = verticalFOV / 2;
-        var verticalPixels = Math.tan(halfVerticalFOV);
-        var horizontalPixels = aspectRatio * verticalPixels;
-        var halfHorizontalFOV = Math.atan(horizontalPixels);
-        return halfHorizontalFOV * 2;
-      }
-
     </script>
   </head>
 
   <body onload='webGLStart();' style='margin: 0px'>
-    <canvas id='canvas' style='border: none;'>
-
-    <div id='framerate'></div>
-      Your browser does not support web gl. You know what's awesome? Chrome
+    <canvas id='canvas' style='border: none; cursor: none'>
+      <div id='framerate'></div>
+      Your browser does not support web gl. You know what's awesome? Chrome.
     </canvas>
   </body>
 

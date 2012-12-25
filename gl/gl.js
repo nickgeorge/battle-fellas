@@ -52,7 +52,11 @@ GL.createGL = function(canvas) {
   gl.scale = function(xyz) {
     gl.uniform3fv(this.scaleUniform, xyz); 
   };
-
+  gl.store = gl.drawElements;
+  gl.drawElements = function(a,b,c,d) {
+    //console.log("draw");
+    gl.store(a,b,c,d);
+  };
   //gl.reset = function() {}
 
   return gl;

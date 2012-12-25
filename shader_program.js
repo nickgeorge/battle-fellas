@@ -67,14 +67,15 @@ ShaderProgram.getShaderProgram = function() {
   gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
   shaderProgram.textureCoordAttribute = gl.getAttribLocation(
-      shaderProgram, 'aTextureCoord');
+    shaderProgram, 'aTextureCoord');
   gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute); 
 
   shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, 'uPMatrix');
   shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, 'uMVMatrix');
   shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
 
-  shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
+  shaderProgram.ambientColorUniform = gl.getUniformLocation(
+      shaderProgram, "uAmbientColor");
   shaderProgram.lightingDirectionUniform = gl.getUniformLocation(
       shaderProgram, "uLightingDirection");
   shaderProgram.directionalColorUniform = gl.getUniformLocation(
@@ -85,8 +86,9 @@ ShaderProgram.getShaderProgram = function() {
       shaderProgram, "uUseTexture");
   shaderProgram.scaleUniform = gl.getUniformLocation(
       shaderProgram, "uScale");
+  shaderProgram.useLightingUniform = gl.getUniformLocation(
+      shaderProgram, "uUseLighting");
   
-  console.log(shaderProgram);
   shaderProgram.reset = ShaderProgram.prototype.reset;
   shaderProgram.reset();
 
@@ -94,7 +96,7 @@ ShaderProgram.getShaderProgram = function() {
 };
 
 ShaderProgram.prototype.reset = function() {
-  gl.uniform1i(this.useTextureUniform, false);
+  gl.uniform1i(this.useLightingUniform, true);
   gl.uniform1i(this.useTextureUniform, ShaderProgram.USE_TEXTURE_DEFAULT); 
   gl.uniform3fv(this.scaleUniform, ShaderProgram.SCALE_DEFAULT); 
   gl.uniform4fv(this.colorOverrideUniform, ShaderProgram.COLOR_OVERRIDE_DEFAULT);

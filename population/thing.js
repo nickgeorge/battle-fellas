@@ -36,8 +36,7 @@ Thing.prototype.setColor = function(rgba) {
 };
 
 Thing.prototype.setColorInternal = function() {
-  throw "Set Color Internal unimplemented for type " +
-      typeof this;
+  throw "Set Color Internal unimplemented for " + this
 };
 
 Thing.prototype.draw = function() {
@@ -57,7 +56,7 @@ Thing.prototype.transform = function() {
   gl.rotate(this.phi, [0, 1, 0]);
 };
 
-Thing.prototype.getClosestThing = function(alive) {
+Thing.prototype.getClosestThing = function() {
   var minDistance = Number.MAX_VALUE;
   var closestThing = null;
   for (var i = 0, thing; thing = world.things[i]; i++) {

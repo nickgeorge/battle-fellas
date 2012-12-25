@@ -20,6 +20,7 @@ Arrow.prototype.advance = function(dt) {
     this.speed[2] -= world.G*dt;
   } else {
     this.speed = [0, 0, 0];
+    this.position[2] = 0
   }
 };
 

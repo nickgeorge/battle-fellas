@@ -48,6 +48,7 @@ Box.prototype.draw = function() {
 };
 
 Box.prototype.render = function() {
+  !this.colorBuffer && this.setColor([1, 1, 1]);
 
   if (this.texture) {
     if (!this.texture.loaded) return;
@@ -56,7 +57,6 @@ Box.prototype.render = function() {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, this.textureBuffer.itemSize, gl.FLOAT, false, 0, 0);
   };
-  //gl.uniform1i(shaderProgram.useTextureUniform, false);  
 
   gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
   gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, this.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -132,9 +132,7 @@ Box.prototype.setTexture = function(texture, opt_buildBuffer) {
 };
 
 Box.prototype.createVertexBuffer = function(point1, point2) {
-  this.vertexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-  var vertices = [
+  var verticies = [
     // Top face
     point1[0], point1[1], point2[2],
     point2[0], point1[1], point2[2],
@@ -171,9 +169,7 @@ Box.prototype.createVertexBuffer = function(point1, point2) {
     point1[0], point2[1], point2[2],
     point1[0], point2[1], point1[2]
   ];
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-  this.vertexBuffer.itemSize = 3;
-  this.vertexBuffer.numItems = 24;
+  this.vertexBuffer = Util.generateBuffer(verticies, 3);
 };
 
 Box.ALL_FACES = {
@@ -190,8 +186,6 @@ Box.prototype.createTextureBuffer = function(opt_faces){
   for (var face in Box.ALL_FACES) {
     if (!faces[face]) faces[face] = [-1, -1, -1, -1];
   };
-  this.textureBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
   var textureCoords = [
     // Top' face
     faces.top[0], faces.top[2],
@@ -230,15 +224,11 @@ Box.prototype.createTextureBuffer = function(opt_faces){
     faces.back[0], faces.back[3]
   ];
 
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
-  this.textureBuffer.itemSize = 2;
-  this.textureBuffer.numItems = textureCoords.length/2;
+  this.textureBuffer = Util.generateBuffer(textureCoords, 2);
   return this;
 };
 
 Box.initBuffers = function() {
-  Box.normalBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, Box.normalBuffer);
   var vertexNormals = [
     // Front face
      0.0,  0.0,  1.0,
@@ -276,12 +266,8 @@ Box.initBuffers = function() {
     -1.0,  0.0,  0.0,
     -1.0,  0.0,  0.0
   ];
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
-  Box.normalBuffer.itemSize = 3;
-  Box.normalBuffer.numItems = 24;
+  Box.normalBuffer = Util.generateBuffer(vertexNormals, 3);
 
-  Box.indexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, Box.indexBuffer);
   var vertexIndices = [
     0, 1, 2,    0, 2, 3,  // Front face
     4, 5, 6,    4, 6, 7,  // Back face
@@ -290,9 +276,8 @@ Box.initBuffers = function() {
     16, 17, 18,   16, 18, 19, // Right face
     20, 21, 22,   20, 22, 23  // Left face
   ];
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(vertexIndices), gl.STATIC_DRAW);
-  Box.indexBuffer.itemSize = 1;
-  Box.indexBuffer.numItems = 36;
+  Box.indexBuffer = Util.generateIndexBuffer(vertexIndices); 
+  console.log(Box.indexBuffer);
 };
 
 Box.prototype.dispose = function() {

@@ -12,7 +12,6 @@ Camera = function() {
   this.vThetaMag = 1/2*Math.PI;
   this.vRMag = 20;
 
-  this.bobbing = true;
   this.bob = 0;
 };
 
@@ -29,18 +28,27 @@ Camera.prototype.advance = function(dt) {
 };
 
 Camera.prototype.transform = function() {
-  mat4.identity(gl.mvMatrix);
+  if (world.theOne) {
+    var anchor = world.theOne;
+  } else {
+    var anchor = this;
+  }
 
-  mat4.rotate(gl.mvMatrix, -this.phi, [1, 0, 0]);
-  mat4.rotate(gl.mvMatrix, -this.theta, [0, 0, 1]);
+  mat4.rotate(gl.mvMatrix, -anchor.phi - pi/2, [1, 0, 0]);
+  mat4.rotate(gl.mvMatrix, -anchor.theta + pi/2, [0, 0, 1]);
+  var position = anchor.center();
   mat4.translate(gl.mvMatrix, 
       [
-        this.position[0], 
-        this.position[1], 
-        this.position[2] + Math.sin(this.bob)/3.5
+        -position[0], 
+        -position[1], 
+        -position[2]
       ]);
 };
 
 Camera.prototype.setPosition = function(xyz) {
   vec3.set(Vector.invert(xyz), this.position);
+};
+
+Camera.prototype.center = function() {
+  return this.position;
 };

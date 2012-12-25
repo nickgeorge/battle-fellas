@@ -21,7 +21,7 @@ Fella.prototype.advance = function(dt) {
     if (!this.target || !this.target.alive) this.aquireTarget();
     if (this.target && this.target.alive) {
       this.theta = Vector.thetaTo(this.position, this.target.position);
-      if (Math.random() < .025) this.shoot();
+      if (Math.random() < .015) this.shoot();
     }
     this.advanceAlive(dt);
   } else { 
@@ -30,8 +30,11 @@ Fella.prototype.advance = function(dt) {
 };
 
 Fella.prototype.aquireTarget = function() {
-  //this.target = this.getClosestThing(true);
-  this.target = world.theOne;
+  this.target = world.theOne || this.getClosestThing();
+};
+
+Fella.prototype.setColorInternal = function(rgb) {
+  this.parts.apply('setColorInternal', rgb);
 };
 
 
@@ -108,7 +111,7 @@ Fella.prototype.draw = function() {
 };
 
 Fella.prototype.advanceDead = function(dt) {
-  this.parts.apply("advance", [dt]);
+  this.parts.apply("advance", dt);
 };
 
 Fella.prototype.buildBody = function(rgb) {
@@ -181,7 +184,7 @@ Fella.newRandom = function() {
       setTheta(Math.random() * Math.PI*2).
       setPosition([
         Math.random()*world.board.size[0] + world.board.min(0),
-        Math.random()*world.board.size[1] + world.board.min(1),
+        world.board.max(1) - Math.random() * 45,
         0
       ]);
 };

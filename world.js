@@ -57,11 +57,9 @@ World.prototype.populate = function() {
   light.setDirectionalColor([.8, .8, .8]);
   this.addLight(light);
 
-  var numFellas = 1;
-  var numDumbCrates = 0;
+  var numFellas = 0;
+  var numDumbCrates = 10;
   var numSmartCrates = 0;
-
-  var isPlayer = true;
 
   this.board = new Box([100, 200, 1]).
       setColor([1, 1, 1]).
@@ -70,6 +68,8 @@ World.prototype.populate = function() {
       createTextureBuffer({
         top: [0, 15, 0, 30]
       });
+
+  //this.board = new Board();
 
   for (var i = 0; i < numFellas; i++) {
     this.add(Fella.newRandom());
@@ -81,12 +81,9 @@ World.prototype.populate = function() {
     this.add(SmartCrate.newRandom());
   }
 
-  if (isPlayer && !(this.theOne && this.theOne.alive)) {
-    this.theOne = Hero.newRandom();
-    this.add(this.theOne);
+  if (isPlayer) {
+    this.add(Hero.newRandom());
   }
-
-  this.effects.push(new ImageCross([1,1,1]).setTexture(ImageManager.TEXTURES.SPARK, true))
 };
 
 World.prototype.inBounds = function(xyz) {
@@ -121,14 +118,13 @@ World.prototype.checkCollisions = function() {
       var d_x = thingCenter[0] - projectileCenter[0];
       var d_y = thingCenter[1] - projectileCenter[1];
       var d_z = thingCenter[2] - projectileCenter[2];
-      if (d_x < 2 && d_y < 2 && d_z < 2) {
+      if (Math.abs(d_x) < 2 && Math.abs(d_y) < 2 && Math.abs(d_z) < 2) {
         var d2 = d_x*d_x + d_y*d_y + d_z*d_z;
-
         if (d2 < 1) {
           if (thing.alive) {
             thing.die();
             projectile.detonate();
-            this.add(thing.constructor.newRandom());
+            //this.add(thing.constructor.newRandom());
           }
         }
       } 

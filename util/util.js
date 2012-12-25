@@ -1,3 +1,5 @@
+var pi = Math.PI;
+
 Util = function(){};
 
 Util.degToRad = function(degrees) {
@@ -22,6 +24,16 @@ Util.partial = function(fn, var_args) {
     var newArgs = Array.prototype.slice.call(arguments);
     newArgs.unshift.apply(newArgs, args);
     return fn.apply(this, newArgs);
+  };
+};
+
+Util.bind = function(fn, thisObj, var_args) {
+  var args = Array.prototype.slice.call(arguments, 2);
+  return function() {
+    // Prepend the bound arguments to the current arguments.
+    var newArgs = Array.prototype.slice.call(arguments);
+    newArgs.unshift.apply(newArgs, args);
+    return fn.apply(thisObj, newArgs);
   };
 };
 
@@ -52,14 +64,45 @@ Util.base = function(me, opt_methodName, var_args) {
     return me.constructor.prototype[opt_methodName].apply(me, args);
   } else {
     throw Error(
-        'goog.base called from a method of one name ' +
+        'Util.base called from a method of one name ' +
         'to a method of a different name');
   }
 };
 
 Util.sqr = function(x) {
   return x*x;
+};
+
+Util.generateBuffer = function(primitives, itemSize, opt_bufferType) {
+  var bufferType = opt_bufferType || gl.ARRAY_BUFFER;
+  var buffer = gl.createBuffer();
+  gl.bindBuffer(bufferType, buffer);
+  gl.bufferData(bufferType, 
+      new Float32Array(primitives), gl.STATIC_DRAW);
+  buffer.itemSize = itemSize;
+  buffer.numItems = primitives.length / itemSize;
+  return buffer;
+};
+
+Util.generateIndexBuffer = function(primitives) {
+  var buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, 
+      new Uint16Array(primitives), gl.STATIC_DRAW);
+  buffer.itemSize = 1;
+  buffer.numItems = primitives.length;
+  
+  return buffer;
 }
+
+Util.setColorOverride = function(rgba) {
+  gl.uniform4fv(shaderProgram.colorOverrideUniform,
+      rgba);
+};
+
+Util.setUseLighting = function(useLighting) {
+  gl.uniform1i(shaderProgram.useLightingUniform, useLighting);
+};
 
 Array.prototype.apply = function(fnString, arg1, arg2, arg3) {
   for (var i = 0, elm; elm = this[i]; i++) {
@@ -73,6 +116,23 @@ Array.prototype.remove = function(removee){
       this.splice(index, 1);
   }
   return this;
+};
+
+Array.prototype.pushAll = function(addee) {
+  for (var i = 0; addee[i]; i++) {
+    this.push(addee[i]);
+  }
+};
+
+Array.prototype.flatten = function() {
+  var flattenedThis = [];
+  for (var i = 0; this[i]; i++) {
+    if (this[i].flatten) {
+      this.pushAll(this[i].flatten());
+    } else {
+      flattenedThis.push(this[i]);
+    }
+  }
 };
 
 Framerate = function(id) {
