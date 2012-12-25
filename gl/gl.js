@@ -15,49 +15,44 @@ GL.createGL = function(canvas) {
   
   gl.normalMatrix = mat3.create();
 
-  gl.pushMatrix = function() {
-    gl.stackIndex++;
-    if (!gl.stack[gl.stackIndex]) {
-      var copy = mat4.create();
-      gl.stack.push(copy);      
-    }
-    mat4.set(gl.mvMatrix, gl.stack[gl.stackIndex]);
-  };
+  for (var key in GL.prototype) {
+    gl[key] = GL.prototype[key];
+  }
 
-  gl.popMatrix = function() {
-    if (gl.stackIndex == -1) {
-      throw 'Invalid popMatrix!';
-    }
-    mat4.set(gl.stack[gl.stackIndex], gl.mvMatrix);
-    gl.stackIndex--;
-  };
-
-  gl.setMatrixUniforms = function() {
-    gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, gl.pMatrix);
-    gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, gl.mvMatrix);
-
-    mat4.toInverseMat3(gl.mvMatrix, gl.normalMatrix);
-    mat3.transpose(gl.normalMatrix);
-    gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, gl.normalMatrix);
-  };
-
-  gl.rotate = function (angle, axis) {
-    mat4.rotate(gl.mvMatrix, angle, axis);
-  };
-
-  gl.translate = function(xyz) {
-    mat4.translate(gl.mvMatrix, xyz);
-  };
-
-  gl.scale = function(xyz) {
-    gl.uniform3fv(this.scaleUniform, xyz); 
-  };
-  gl.store = gl.drawElements;
-  gl.drawElements = function(a,b,c,d) {
-    //console.log("draw");
-    gl.store(a,b,c,d);
-  };
-  //gl.reset = function() {}
 
   return gl;
 }
+
+GL.prototype.pushMatrix = function() {
+  this.stackIndex++;
+  if (!this.stack[this.stackIndex]) {
+    var copy = mat4.create();
+    this.stack.push(copy);      
+  }
+  mat4.set(this.mvMatrix, this.stack[this.stackIndex]);
+};
+
+GL.prototype.popMatrix = function() {
+  if (this.stackIndex == -1) {
+    throw 'Invalid popMatrix!';
+  }
+  mat4.set(this.stack[this.stackIndex], this.mvMatrix);
+  this.stackIndex--;
+};
+
+GL.prototype.setMatrixUniforms = function() {
+  this.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, this.pMatrix);
+  this.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, this.mvMatrix);
+
+  mat4.toInverseMat3(this.mvMatrix, this.normalMatrix);
+  mat3.transpose(this.normalMatrix);
+  this.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, this.normalMatrix);
+};
+
+GL.prototype.rotate = function (angle, axis) {
+  mat4.rotate(this.mvMatrix, angle, axis);
+};
+
+GL.prototype.translate = function(xyz) {
+  mat4.translate(this.mvMatrix, xyz);
+};

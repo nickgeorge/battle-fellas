@@ -6,6 +6,7 @@
     <script type='text/javascript' src='util/util.js'></script>
     <script type='text/javascript' src='util/light.js'></script>
     <script type='text/javascript' src='util/vector.js'></script>
+    <script type='text/javascript' src='util/framerate.js'></script>
     <script type='text/javascript' src='gl/glMatrix-0.9.5.min.js'></script>
     <script type='text/javascript' src='gl/webgl-utils.js'></script>
     <script type='text/javascript' src='gl/gl.js'></script>
@@ -29,7 +30,7 @@
     <script type='text/javascript' src='camera.js'></script>
     <script type='text/javascript' src='shader_program.js'></script>
 
-    <script id='shader-fs' type='x-shader/x-fragment'>
+    <script id='fragment-shader' type='x-shader/x-fragment'>
       precision mediump float;
 
       varying vec2 vTextureCoord;
@@ -54,7 +55,7 @@
       }
     </script>
 
-    <script id='shader-vs' type='x-shader/x-vertex'>
+    <script id='vertex-shader' type='x-shader/x-vertex'>
       attribute vec3 aVertexPosition;
       attribute vec3 aVertexNormal;
       attribute vec4 aVertexColor;

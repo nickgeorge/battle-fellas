@@ -24,9 +24,8 @@ Crosshair.prototype.generateBuffers = function() {
 };
 
 Crosshair.prototype.draw = function() {
-
-  Util.setUseLighting(false);
-  Util.setColorOverride(this.color);
+  shaderProgram.setUseLighting(false);
+  shaderProgram.setColorOverride(this.color);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
   gl.vertexAttribPointer(
@@ -37,7 +36,8 @@ Crosshair.prototype.draw = function() {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
   
   gl.setMatrixUniforms();
-  gl.drawElements(gl.LINES, this.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+  gl.drawElements(gl.LINES, 
+      this.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
   shaderProgram.reset();
 };

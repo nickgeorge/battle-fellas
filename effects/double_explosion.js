@@ -30,7 +30,8 @@ DoubleExplosion.prototype.draw = function() {
   gl.pushMatrix();
   this.transform();
 
-  gl.uniform3fv(shaderProgram.scaleUniform, [this.size, this.size, this.size]); 
+  gl.uniform3fv(shaderProgram.scaleUniform,
+      [this.size, this.size, this.size]); 
   this.small.draw();
 
   gl.uniform3fv(shaderProgram.scaleUniform, [

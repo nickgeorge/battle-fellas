@@ -95,15 +95,6 @@ Util.generateIndexBuffer = function(primitives) {
   return buffer;
 }
 
-Util.setColorOverride = function(rgba) {
-  gl.uniform4fv(shaderProgram.colorOverrideUniform,
-      rgba);
-};
-
-Util.setUseLighting = function(useLighting) {
-  gl.uniform1i(shaderProgram.useLightingUniform, useLighting);
-};
-
 Array.prototype.apply = function(fnString, arg1, arg2, arg3) {
   for (var i = 0, elm; elm = this[i]; i++) {
     elm[fnString](arg1, arg2, arg3);
@@ -132,44 +123,5 @@ Array.prototype.flatten = function() {
     } else {
       flattenedThis.push(this[i]);
     }
-  }
-};
-
-Framerate = function(id) {
-  this.lastTime = 0;
-  this.numFramerates = 10;
-  this.framerateUpdateInterval = 500;
-  this.id = id;
-
-  this.renderTime = -1;
-  this.framerates = [ ];
-  self = this;
-  var fr = function() { self.updateFramerate() }
-  setInterval(fr, this.framerateUpdateInterval);
-};
-
-Framerate.prototype.updateFramerate = function() {
-  var tot = 0;
-  for (var i = 0; i < this.framerates.length; ++i)
-    tot += this.framerates[i];
-
-  var framerate = tot / this.framerates.length;
-  framerate = Math.round(framerate);
-  document.getElementById(this.id).innerHTML = "Framerate:"+framerate+"fps";
-};
-
-Framerate.prototype.snapshot = function() {
-  if (this.renderTime < 0)
-    this.renderTime = new Date().getTime();
-  else {
-    var newTime = new Date().getTime();
-    var t = newTime - this.renderTime;
-    if (t == 0)
-      return;
-    var framerate = 1000/t;
-    this.framerates.push(framerate);
-    while (this.framerates.length > this.numFramerates)
-      this.framerates.shift();
-    this.renderTime = newTime;
   }
 };
