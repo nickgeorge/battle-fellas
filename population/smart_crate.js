@@ -13,6 +13,8 @@ SmartCrate = function(position) {
   this.box = new Box([1, 1, 1]).
       setColor([1, 1, 1]).
       setTexture(ImageManager.TEXTURES.QUESTION, true);
+
+  this.parts = [this.box];
 };
 Util.inherits(SmartCrate, Thing);
 

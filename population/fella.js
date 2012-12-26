@@ -151,6 +151,7 @@ Fella.prototype.shoot = function() {
   var d_z = targetCenter[2] - thisCenter[2];
   var d_xy = Math.sqrt(d_x*d_x + d_y*d_y);
   var s = Arrow.DEFAULT_SPEED;
+
   var a = -world.G * d_xy*d_xy / (2*s*s);
   var b = d_xy;
   var c = a - d_z;
@@ -167,6 +168,7 @@ Fella.prototype.shoot = function() {
     s_xy*Math.sin(theta),
     -s*Math.sin(phi)
   ];
+  
   var shot = new Arrow(this, v_shot).
       setPosition([this.position[0], this.position[1], 1.5]).
       setTheta(theta).

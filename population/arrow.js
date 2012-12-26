@@ -5,6 +5,8 @@ Arrow = function(parent, speed) {
   this.position = [0, 0, 0];
   this.shaft = new Box([1.5, .0625, .0625]).
       setColor([.7, 1, .7]);
+
+  this.parts = [this.shaft];
 };
 Util.inherits(Arrow, Thing);
 

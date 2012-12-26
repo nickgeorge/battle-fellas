@@ -6,12 +6,12 @@ DumbCrate = function(position) {
   this.box = new Box([1, 1, 1]).
       setColor([1, 1, 1]).
       setTexture(ImageManager.TEXTURES.CRATE, true);
+
+  this.parts = [this.box];
 };
 Util.inherits(DumbCrate, Thing);
 
 DumbCrate.DEFAULT_SPEED = 60;
-
-
 
 DumbCrate.prototype.die = function() {
   world.thingsToRemove.push(this);

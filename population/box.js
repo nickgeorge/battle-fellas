@@ -1,16 +1,8 @@
-Box = function(point1, point2) {
+Box = function(size) {
   this.super();
   if (!Box.normalBuffer) Box.initBuffers();
 
-  this.point1 = point1;
-  this.point2 = point2;
-
-  if (!point2) {
-    point2 = Vector.multiply(point1, .5);
-    point1 = Vector.multiply(point2, -1);
-  }
-
-  this.size = Vector.difference(point1, point2);
+  this.size = size;
   this.fulcrum = null;
 
   this.colorBuffer = null;
@@ -18,7 +10,7 @@ Box = function(point1, point2) {
   this.texture = null;
   this.textureBuffer = null;
 
-  this.createVertexBuffer(point1, point2);
+  this.createVertexBuffer(this.size);
 
   this.alive = true;
 };
@@ -131,43 +123,44 @@ Box.prototype.setTexture = function(texture, opt_buildBuffer) {
   return this;
 };
 
-Box.prototype.createVertexBuffer = function(point1, point2) {
+Box.prototype.createVertexBuffer = function(size) {
+  var halfSize = Vector.multiply(size, .5);
   var verticies = [
     // Top face
-    point1[0], point1[1], point2[2],
-    point2[0], point1[1], point2[2],
-    point2[0], point2[1], point2[2],
-    point1[0], point2[1], point2[2],
+    -halfSize[0], -halfSize[1],  halfSize[2],
+     halfSize[0], -halfSize[1],  halfSize[2],
+     halfSize[0],  halfSize[1],  halfSize[2],
+    -halfSize[0],  halfSize[1],  halfSize[2],
 
     // Back face
-    point1[0], point1[1], point1[2],
-    point1[0], point2[1], point1[2],
-    point2[0], point2[1], point1[2],
-    point2[0], point1[1], point1[2],
+    -halfSize[0], -halfSize[1], -halfSize[2],
+    -halfSize[0],  halfSize[1], -halfSize[2],
+     halfSize[0],  halfSize[1], -halfSize[2],
+     halfSize[0], -halfSize[1], -halfSize[2],
 
     // Top face
-    point1[0], point2[1], point1[2],
-    point1[0], point2[1], point2[2],
-    point2[0], point2[1], point2[2],
-    point2[0], point2[1], point1[2],
+    -halfSize[0],  halfSize[1], -halfSize[2],
+    -halfSize[0],  halfSize[1],  halfSize[2],
+     halfSize[0],  halfSize[1],  halfSize[2],
+     halfSize[0],  halfSize[1], -halfSize[2],
 
     // Bottom face
-    point1[0], point1[1], point1[2],
-    point2[0], point1[1], point1[2],
-    point2[0], point1[1], point2[2],
-    point1[0], point1[1], point2[2],
+    -halfSize[0], -halfSize[1], -halfSize[2],
+     halfSize[0], -halfSize[1], -halfSize[2],
+     halfSize[0], -halfSize[1],  halfSize[2],
+    -halfSize[0], -halfSize[1],  halfSize[2],
 
     // Right face
-    point2[0], point1[1], point1[2],
-    point2[0], point2[1], point1[2],
-    point2[0], point2[1], point2[2],
-    point2[0], point1[1], point2[2],
+     halfSize[0], -halfSize[1], -halfSize[2],
+     halfSize[0],  halfSize[1], -halfSize[2],
+     halfSize[0],  halfSize[1],  halfSize[2],
+     halfSize[0], -halfSize[1],  halfSize[2],
 
     // Left face
-    point1[0], point1[1], point1[2],
-    point1[0], point1[1], point2[2],
-    point1[0], point2[1], point2[2],
-    point1[0], point2[1], point1[2]
+    -halfSize[0], -halfSize[1], -halfSize[2],
+    -halfSize[0], -halfSize[1],  halfSize[2],
+    -halfSize[0],  halfSize[1],  halfSize[2],
+    -halfSize[0],  halfSize[1], -halfSize[2]
   ];
   this.vertexBuffer = Util.generateBuffer(verticies, 3);
 };

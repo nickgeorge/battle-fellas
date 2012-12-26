@@ -94,15 +94,12 @@ World.prototype.inBounds = function(xyz) {
 World.prototype.addAndRemoveThings = function() {
   for (var i = 0, thing; thing = this.thingsToRemove[i]; i++) {
     this.things.remove(thing);
-    thing = null;
   }
   for (var i = 0, effect; effect = this.effectsToRemove[i]; i++) {
     this.effects.remove(effect);
-    effect = null;
   }
   for (var i = 0, projectile; projectile = this.projectilesToRemove[i]; i++) {
     this.projectiles.remove(projectile);
-    projectile = null;
   }
   this.thingsToRemove = [];
   this.effectsToRemove = [];
@@ -110,24 +107,20 @@ World.prototype.addAndRemoveThings = function() {
 };
 
 World.prototype.checkCollisions = function() {
-  for (var i = 0, projectile; projectile = this.projectiles[i]; i++) {
-    for (var j = 0, thing; thing = this.things[j]; j++) {
-      if (projectile.parent == thing) continue;
-      var thingCenter = thing.center();
-      var projectileCenter = projectile.center();
-      var d_x = thingCenter[0] - projectileCenter[0];
-      var d_y = thingCenter[1] - projectileCenter[1];
-      var d_z = thingCenter[2] - projectileCenter[2];
-      if (Math.abs(d_x) < 2 && Math.abs(d_y) < 2 && Math.abs(d_z) < 2) {
-        var d2 = d_x*d_x + d_y*d_y + d_z*d_z;
-        if (d2 < 1) {
-          if (thing.alive) {
-            thing.die();
-            projectile.detonate();
-            //this.add(thing.constructor.newRandom());
-          }
-        }
-      } 
+  for (var i = 0; this.projectiles[i]; i++) {
+    for (var j = 0; this.things[j]; j++) {
+      var projectile = this.projectiles[i];
+      var thing = this.things[j];
+      if (projectile.parent == thing) {
+        continue;
+      }
+      if (Collision.check(projectile, thing)) {
+        if (thing.alive) {
+          thing.die();
+          projectile.detonate();
+          //this.add(thing.constructor.newRandom());
+        }     
+      }
     }
   }
 };

@@ -18,8 +18,6 @@ GL.createGL = function(canvas) {
   for (var key in GL.prototype) {
     gl[key] = GL.prototype[key];
   }
-
-
   return gl;
 }
 

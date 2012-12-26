@@ -22,7 +22,7 @@ Hero.prototype.aquireTarget = function() {
   this.target = this.getClosestThing();
 };
 
-Hero.prototype.advance = function(dt) {  
+Hero.prototype.advance = function(dt) {
   if (this.alive) {
     this.advanceAlive(dt);
   } else { 
