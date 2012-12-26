@@ -36,8 +36,8 @@ Hero.prototype.advanceAlive = function(dt) {
 
   if (this.vX || this.vY) this.bob += 3*pi * dt;
 
-  this.position[0] -= Math.cos(this.theta)*this.vX*dt +
-      -Math.sin(this.theta)*this.vY*dt;
+  this.position[0] -= Math.cos(this.theta)*this.vX*dt -
+      Math.sin(this.theta)*this.vY*dt;
   this.position[1] -= Math.sin(this.theta)*this.vX*dt + 
       Math.cos(this.theta)*this.vY*dt;  
 

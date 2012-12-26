@@ -10,9 +10,9 @@ ImageManager.bindTexture = function(texture) {
 ImageManager.initTextures = function() {
   ImageManager.TEXTURES = {
     CRATE: ImageManager.initTexture('media/crate.png'),
-    THWOMP: ImageManager.initTexture('media/thwomp_small.png'),
+    THWOMP: ImageManager.initTexture('media/thwomp.png'),
     GRASS: ImageManager.initTexture('media/grass.png'),
-    SPARK: ImageManager.initTexture('media/spark_orig_1.png'),
+    SPARK: ImageManager.initTexture('media/spark.png'),
     ENERGY: ImageManager.initTexture('media/energybwa.png'),
     QUESTION: ImageManager.initTexture('media/question.png')
   };

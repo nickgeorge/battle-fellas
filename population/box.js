@@ -65,22 +65,6 @@ Box.prototype.render = function() {
   gl.drawElements(gl.TRIANGLES, Box.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
   shaderProgram.reset();
-}
-
-Box.prototype.setRandomPosition = function(var_args) {
-  var dp = null;
-  if (arguments.length == 1) {
-    dp = [arguments[0], arguments[0], arguments[0]];
-  }
-  if (arguments.length == 3) {
-    dp = [arguments[0], arguments[1], arguments[2]];
-  }
-  this.position = [
-    (2*Math.random() - 1)*dp[0],
-    (2*Math.random() - 1)*dp[1],
-    (2*Math.random() - 1)*dp[2]
-  ];
-  return this;
 };
 
 Box.prototype.setColorInternal = function() {
