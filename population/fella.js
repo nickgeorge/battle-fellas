@@ -126,7 +126,7 @@ Fella.prototype.buildBody = function(rgb) {
   this.parts.head = new Box([.5, .5, .5]).
       setPosition([0, 0, 2.125]).
       setColor(rgb).
-      setTexture(ImageManager.TEXTURES.THWOMP).
+      setTexture(ImageManager.Textures.THWOMP).
       createTextureBuffer({
         front: [0, 1, 0, 1]
       });
@@ -168,7 +168,7 @@ Fella.prototype.shoot = function() {
     s_xy*Math.sin(theta),
     -s*Math.sin(phi)
   ];
-  
+
   var shot = new Arrow(this, v_shot).
       setPosition([this.position[0], this.position[1], 1.5]).
       setTheta(theta).
@@ -192,5 +192,9 @@ Fella.newRandom = function() {
 };
 
 Fella.prototype.center = function() {
-  return [this.position[0], this.position[1], this.position[2] + 2];
+  return [
+    this.position[0],
+    this.position[1],
+    this.position[2] + 1.187
+  ];
 };

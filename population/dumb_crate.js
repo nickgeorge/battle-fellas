@@ -5,7 +5,7 @@ DumbCrate = function(position) {
   this.alive = true;
   this.box = new Box([1, 1, 1]).
       setColor([1, 1, 1]).
-      setTexture(ImageManager.TEXTURES.CRATE, true);
+      setTexture(ImageManager.Textures.CRATE, true);
 
   this.parts = [this.box];
 };

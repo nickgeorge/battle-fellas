@@ -4,11 +4,11 @@ DoubleExplosion = function(size, smallColor, bigColor, callback) {
   this.size = size;
   this.small = new ImageCross().
       setColor(smallColor || [1, 0, 0]).
-      setTexture(ImageManager.TEXTURES.SPARK, true);
+      setTexture(ImageManager.Textures.SPARK, true);
 
   this.big = new ImageCross().
       setColor(bigColor || [1, 1, 0]).
-      setTexture(ImageManager.TEXTURES.ENERGY, true);
+      setTexture(ImageManager.Textures.ENERGY, true);
 
   this.callback = callback;
 };

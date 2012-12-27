@@ -57,14 +57,14 @@ World.prototype.populate = function() {
   light.setDirectionalColor([.8, .8, .8]);
   this.addLight(light);
 
-  var numFellas = 0;
-  var numDumbCrates = 10;
-  var numSmartCrates = 0;
+  var numFellas = 15;
+  var numDumbCrates = 20;
+  var numSmartCrates = 10;
 
   this.board = new Box([100, 200, 1]).
       setColor([1, 1, 1]).
       setPosition([0, 0, -.5]).
-      setTexture(ImageManager.TEXTURES.GRASS).
+      setTexture(ImageManager.Textures.GRASS).
       createTextureBuffer({
         top: [0, 15, 0, 30]
       });
@@ -118,7 +118,6 @@ World.prototype.checkCollisions = function() {
         if (thing.alive) {
           thing.die();
           projectile.detonate();
-          //this.add(thing.constructor.newRandom());
         }     
       }
     }

@@ -1,6 +1,6 @@
 ImageManager = function() {};
 
-ImageManager.TEXTURES = {};
+ImageManager.Textures = {};
 
 ImageManager.bindTexture = function(texture) {
   gl.activeTexture(gl.TEXTURE0);
@@ -8,7 +8,7 @@ ImageManager.bindTexture = function(texture) {
 };
 
 ImageManager.initTextures = function() {
-  ImageManager.TEXTURES = {
+  ImageManager.Textures = {
     CRATE: ImageManager.initTexture('media/crate.png'),
     THWOMP: ImageManager.initTexture('media/thwomp.png'),
     GRASS: ImageManager.initTexture('media/grass.png'),

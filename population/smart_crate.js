@@ -12,7 +12,7 @@ SmartCrate = function(position) {
   this.alive = true;
   this.box = new Box([1, 1, 1]).
       setColor([1, 1, 1]).
-      setTexture(ImageManager.TEXTURES.QUESTION, true);
+      setTexture(ImageManager.Textures.QUESTION, true);
 
   this.parts = [this.box];
 };
@@ -70,14 +70,6 @@ SmartCrate.prototype.dispose = function() {
   this.box.dispose();
 };
 
-SmartCrate.newRandom = function() {
-  return new SmartCrate([
-        Math.random()*world.board.size[0] + world.board.min(0),
-        Math.random()*world.board.size[1] + world.board.min(1),
-        Math.random()*10 + 10
-      ]);
-};
-
 SmartCrate.prototype.shoot = function() {
   var s = 30;
   var s_xy = Math.cos(pi/2 + this.phi)*s;
@@ -88,7 +80,11 @@ SmartCrate.prototype.shoot = function() {
     s*Math.sin(pi/2 + this.phi)
   ];
   var shot = new Fireball(this, v_shot).
-      setPosition([this.position[0], this.position[1], this.position[2]]);
+      setPosition([
+        this.position[0],
+        this.position[1],
+        this.position[2]
+      ]);
 
   world.projectiles.push(shot);
 };
@@ -96,11 +92,19 @@ SmartCrate.prototype.shoot = function() {
 SmartCrate.prototype.getEnd = function() {
   var theta = Math.random() * 2 * pi;
   var phi = Math.random() * 2 * pi;
-  var range_xy =  Math.cos(this.phi)*this.range;
+  var range_xy =  Math.cos(phi)*this.range;
 
   return [
     this.start[0] + range_xy*Math.cos(theta),
     this.start[1] + range_xy*Math.sin(theta),
-    this.start[2] + this.range*Math.sin(phi)
+    Math.max(2, this.start[2] + this.range*Math.sin(phi))
   ];
+};
+
+SmartCrate.newRandom = function() {
+  return new SmartCrate([
+    Math.random()*world.board.size[0] + world.board.min(0),
+    world.board.max(1) - Math.random() * world.board.size[1] / 2,
+    Math.random()*10 + 2
+  ]);
 };

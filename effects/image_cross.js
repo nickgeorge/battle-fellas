@@ -7,6 +7,7 @@ ImageCross = function(size) {
   this.colorOverride = [1, 1, 1, 1];
   this.textureBuffer = null;
   
+  
 };
 Util.inherits(ImageCross, Thing);
 

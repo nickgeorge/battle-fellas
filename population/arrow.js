@@ -13,11 +13,10 @@ Util.inherits(Arrow, Thing);
 Arrow.DEFAULT_SPEED = 60;
 
 Arrow.prototype.advance = function(dt) {
-
   for (var i = 0; i < 3; i++) {
     this.position[i] += this.speed[i]*dt;
   }
-  if (this.position[2] > 0) {
+  if (this.position[2] > 0 || !world.inBounds(this.position) ) {
     this.phi = -Math.atan2(this.speed[2], this.groundspeed());
     this.speed[2] -= world.G*dt;
   } else {

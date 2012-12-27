@@ -9,7 +9,6 @@
     <script type='text/javascript' src='util/physics.js'></script>
     <script type='text/javascript' src='util/util.js'></script>
     <script type='text/javascript' src='util/vector.js'></script>
-    <script type='text/javascript' src='camera.js'></script>
     <script type='text/javascript' src='gl/gl.js'></script>
     <script type='text/javascript' src='gl/glMatrix-0.9.5.min.js'></script>
     <script type='text/javascript' src='gl/shader_program.js'></script>
@@ -30,6 +29,7 @@
     <script type='text/javascript' src='effects/image_cross.js'></script>
     <script type='text/javascript' src='ui/cage.js'></script>
     <script type='text/javascript' src='ui/crosshair.js'></script>
+    <script type='text/javascript' src='camera.js'></script>
     <script type='text/javascript' src='world.js'></script>
 
     <script id='fragment-shader' type='x-shader/x-fragment'>
@@ -143,6 +143,12 @@
             world.advance(dt);
           }
           framerate.snapshot();
+          if (framerate.rollingAverage < 45) {
+            console.log("Low Frame Rate: " + framerate.rollingAverage)
+          }
+          if (framerate.rollingAverage > 75) {
+            console.log("High Frame Rate: " + framerate.rollingAverage)            
+          }
         }
         framerate.lastTime = timeNow;
       }

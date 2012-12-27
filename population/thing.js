@@ -4,8 +4,8 @@ Thing = function(proto) {
   this.theta = proto.theta || 0;
   this.position = proto.position || [0, 0, 0];
   this.fulcrum = proto.fulcrum || null;
-  this.color = proto.color || [0, 0, 0, 0];
-}
+  this.color = proto.color || [0, 0, 0, 0];\
+};
 
 Thing.prototype.setTheta = function(theta) {
   this.theta = theta;
@@ -39,15 +39,20 @@ Thing.prototype.setColorInternal = function() {
   throw "Set Color Internal unimplemented for " + this
 };
 
+Thing.prototype.setTeam = function(team) {
+  this.team = team;
+  return this;
+};
+
 Thing.prototype.draw = function() {
   throw "Draw unimplemented for type " +
-      typeof this;
+      this.constructor;
 
 };
 
 Thing.prototype.advance = function() {
   throw "Advance unimplemented for type " +
-      typeof this;
+      this.constructor;
 };
 
 Thing.prototype.transform = function() {

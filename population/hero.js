@@ -60,7 +60,7 @@ Hero.prototype.center = function() {
   return [
     fellaCenter[0],
     fellaCenter[1],
-    fellaCenter[2] + Math.sin(this.bob)/3.5
+    fellaCenter[2]
   ]; 
 };
 

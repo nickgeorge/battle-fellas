@@ -1,11 +1,14 @@
 Fireball = function(parent, speed) {
   this.super();
-  this.size = 1;
+  this.scale = 1;
   this.speed = speed;
   this.parent = parent;
   this.small = new ImageCross().
       setColor([1, 1, 1, 1]).
-      setTexture(ImageManager.TEXTURES.SPARK, true);
+      setTexture(ImageManager.Textures.SPARK, true);
+  this.small.size = [1, 1, 1];
+  this.parts = [this.small];
+  this.size = [1, 1, 1];
 };
 Util.inherits(Fireball, Thing);
 
@@ -21,7 +24,7 @@ Fireball.prototype.advance = function(dt) {
       g = Math.random()*.6 + .4,
       b = Math.random()*.6 + .4
     ]);
-    this.size = Math.random() + .5;
+    this.scale = Math.random() + .5;
     this.phi = Math.random() * 2*pi;
     this.theta = Math.random() * 2*pi
   }
@@ -34,7 +37,7 @@ Fireball.prototype.draw = function() {
   this.transform();
 
   gl.uniform3fv(shaderProgram.scaleUniform, 
-    [this.size, this.size, this.size]); 
+    [this.scale, this.scale, this.scale]); 
   this.small.draw();
 
   gl.popMatrix();  
