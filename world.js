@@ -118,7 +118,7 @@ World.prototype.checkCollisions = function() {
         if (thing.alive) {
           thing.die();
           projectile.detonate();
-        }     
+        }
       }
     }
   }

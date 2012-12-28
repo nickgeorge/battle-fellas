@@ -31,6 +31,7 @@
     <script type='text/javascript' src='ui/crosshair.js'></script>
     <script type='text/javascript' src='camera.js'></script>
     <script type='text/javascript' src='world.js'></script>
+    <script type='text/javascript' src='socket.io/socket.io.js'></script>
 
     <script id='fragment-shader' type='x-shader/x-fragment'>
       precision mediump float;
@@ -110,6 +111,8 @@
       var gl = null;
       var shaderProgram = null;
       var framerate = null;
+
+      var socket = io.connect('/');
 
       function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
