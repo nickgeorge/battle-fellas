@@ -88,7 +88,7 @@ var GET_A_WEBGL_BROWSER = '' +
  * @type {string}
  */
 var OTHER_PROBLEM = '' +
-  "It doesn't appear your computer can support WebGL.<br/>" +
+  'It doesn\'t appear your computer can support WebGL.<br/>' +
   '<a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>';
 
 /**
@@ -104,14 +104,14 @@ var OTHER_PROBLEM = '' +
  * @return {WebGLRenderingContext} The created context.
  */
 var setupWebGL = function(canvas, opt_attribs, opt_onError) {
-  function handleCreationError(msg) {
+    function handleCreationError(msg) {
   var container = canvas.parentNode;
   if (container) {
     var str = window.WebGLRenderingContext ?
        OTHER_PROBLEM :
        GET_A_WEBGL_BROWSER;
     if (msg) {
-    str += "<br/><br/>Status: " + msg;
+    str += '<br/><br/>Status: ' + msg;
     }
     container.innerHTML = makeFailHTML(str);
   }
@@ -120,7 +120,7 @@ var setupWebGL = function(canvas, opt_attribs, opt_onError) {
   opt_onError = opt_onError || handleCreationError;
 
   if (canvas.addEventListener) {
-  canvas.addEventListener("webglcontextcreationerror", function(event) {
+  canvas.addEventListener('webglcontextcreationerror', function(event) {
       opt_onError(event.statusMessage);
     }, false);
   }
@@ -140,7 +140,7 @@ var setupWebGL = function(canvas, opt_attribs, opt_onError) {
  * @return {!WebGLContext} The created context.
  */
 var create3DContext = function(canvas, opt_attribs) {
-  var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+  var names = ['webgl', 'experimental-webgl', 'webkit-3d', 'moz-webgl'];
   var context = null;
   for (var ii = 0; ii < names.length; ++ii) {
   try {

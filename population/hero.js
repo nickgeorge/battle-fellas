@@ -64,8 +64,17 @@ Hero.prototype.center = function() {
   ]; 
 };
 
+Hero.prototype.eyeLevel = function() {
+  var fellaCenter = this.center();
+  return [
+    fellaCenter[0],
+    fellaCenter[1],
+    fellaCenter[2] + .9375 - Math.sin(this.bob)/3.5
+  ]; 
+};
+
 Hero.prototype.shoot = function() {
-  var s = Arrow.DEFAULT_SPEED;
+  var s = Arrow.DEFAULT_SPEED*1.5;
   var s_xy =  Math.cos(this.phi)*s;
 
   var v_shot = [
@@ -74,13 +83,10 @@ Hero.prototype.shoot = function() {
     s*Math.sin(this.phi)
   ];
   var shot = new Arrow(this, v_shot).
-      setPosition([
-        this.position[0],
-        this.position[1],
-        1.85 + Math.sin(this.bob)/3.5
-      ]).
+      setPosition(this.eyeLevel()).
       setTheta(this.theta).
-      setPhi(this.phi);
+      setPhi(this.phi).
+      setColor([1, 1, 1]);
 
   world.projectiles.push(shot);
 };
@@ -94,11 +100,10 @@ Hero.prototype.die = function() {
 
 Hero.newRandom = function() {
   return new Hero().
-      setColor([1, 1, 1]).
       setTheta(pi/2).
       setPosition([
-          Math.random()*world.board.size[0] + world.board.min(0),
-          world.board.min(1) + Math.random() * 15,
-          0
+        Math.random()*world.board.size[0] + world.board.min(0),
+        world.board.min(1) + Math.random() * 15,
+        0
       ]);
 };

@@ -25,6 +25,11 @@ Arrow.prototype.advance = function(dt) {
   }
 };
 
+Arrow.prototype.setColor = function(rgba) {
+  this.shaft.setColor(rgba);
+  return this;
+};
+
 Arrow.prototype.draw = function() {
   gl.pushMatrix();
 

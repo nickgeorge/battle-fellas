@@ -28,21 +28,15 @@ Camera.prototype.advance = function(dt) {
 };
 
 Camera.prototype.transform = function() {
-  if (world.theOne) {
-    var anchor = world.theOne;
-  } else {
-    var anchor = this;
-  }
-
+  var anchor = world.theOne;
   mat4.rotate(gl.mvMatrix, -anchor.phi - pi/2, [1, 0, 0]);
   mat4.rotate(gl.mvMatrix, -anchor.theta + pi/2, [0, 0, 1]);
-  var position = anchor.center();
-  mat4.translate(gl.mvMatrix, 
-      [
-        -position[0], 
-        -position[1], 
-        -position[2]
-      ]);
+  var position = anchor.eyeLevel();
+  mat4.translate(gl.mvMatrix, [
+    -position[0], 
+    -position[1], 
+    -position[2]
+  ]);
 };
 
 Camera.prototype.setPosition = function(xyz) {

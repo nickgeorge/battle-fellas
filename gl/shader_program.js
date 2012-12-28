@@ -76,22 +76,22 @@ ShaderProgram.getShaderProgram = function() {
   shaderProgram.mvMatrixUniform = 
       gl.getUniformLocation(shaderProgram, 'uMVMatrix');
   shaderProgram.nMatrixUniform = 
-      gl.getUniformLocation(shaderProgram, "uNMatrix");
+      gl.getUniformLocation(shaderProgram, 'uNMatrix');
 
   shaderProgram.ambientColorUniform = 
-      gl.getUniformLocation(shaderProgram, "uAmbientColor");
+      gl.getUniformLocation(shaderProgram, 'uAmbientColor');
   shaderProgram.lightingDirectionUniform = 
-      gl.getUniformLocation(shaderProgram, "uLightingDirection");
+      gl.getUniformLocation(shaderProgram, 'uLightingDirection');
   shaderProgram.directionalColorUniform = 
-      gl.getUniformLocation(shaderProgram, "uDirectionalColor");
+      gl.getUniformLocation(shaderProgram, 'uDirectionalColor');
   shaderProgram.colorOverrideUniform = 
-      gl.getUniformLocation(shaderProgram, "uColorOverride");
+      gl.getUniformLocation(shaderProgram, 'uColorOverride');
   shaderProgram.useTextureUniform = 
-      gl.getUniformLocation(shaderProgram, "uUseTexture");
+      gl.getUniformLocation(shaderProgram, 'uUseTexture');
   shaderProgram.scaleUniform = 
-      gl.getUniformLocation(shaderProgram, "uScale");
+      gl.getUniformLocation(shaderProgram, 'uScale');
   shaderProgram.useLightingUniform = 
-      gl.getUniformLocation(shaderProgram, "uUseLighting");
+      gl.getUniformLocation(shaderProgram, 'uUseLighting');
   
   for (var key in ShaderProgram.prototype) {
     shaderProgram[key] = ShaderProgram.prototype[key];

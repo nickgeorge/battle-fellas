@@ -23,17 +23,17 @@ World.prototype.add = function(thing) {
 World.prototype.draw = function() {
   mat4.rotate(gl.mvMatrix, this.theta, [0, 0, 1]);
   this.board.draw();
-  this.things.apply("draw");
-  this.effects.apply("draw");
-  this.projectiles.apply("draw");
+  this.things.apply('draw');
+  this.effects.apply('draw');
+  this.projectiles.apply('draw');
 };
 
 World.prototype.advance = function(dt) {
   this.addAndRemoveThings();
   this.theta += this.rotSpeed * dt;
-  this.things.apply("advance", [dt]);
-  this.projectiles.apply("advance", [dt]);
-  this.effects.apply("advance", [dt]);
+  this.things.apply('advance', [dt]);
+  this.projectiles.apply('advance', [dt]);
+  this.effects.apply('advance', [dt]);
   this.checkCollisions();
 
   while (this.projectiles.length > 200) this.projectiles.shift().dispose();

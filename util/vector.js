@@ -1,12 +1,21 @@
 Vector = {};
 
-Vector.randomColor = function() {
-  return [Math.random(), Math.random(), Math.random(), 1];
+Vector.randomColor = function(min) {
+  return [
+    Math.random()*(1-min) + min,
+    Math.random()*(1-min) + min,
+    Math.random()*(1-min) + min, 
+    1
+  ];
 };
 
 Vector.reverseColor = function(rgba) {
-
-  return [1 - rgba[0], 1 - rgba[1], 1 - rgba[2], rgba[3]];
+  return [
+    1 - rgba[0],
+    1 - rgba[1],
+    1 - rgba[2],
+    rgba[3]
+  ];
 };
 
 Vector.distanceSquared = function(v1, v2) {
@@ -52,4 +61,8 @@ Vector.sum = function(v1, v2) {
 
 Vector.average = function(v1, v2) {
   return Vector.multiply(Vector.sum(v1, v2), .5);
-}
+};
+
+Vector.mag = function(v1) {
+  return distanceSquared(v1, [0, 0, 0]);
+};

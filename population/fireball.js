@@ -18,15 +18,19 @@ Fireball.prototype.advance = function(dt) {
     this.position[i] += this.speed[i]*dt;
   };
 
-  if (Math.random() > .25) {
-    this.small.setColor([
-      r = Math.random()*.6 + .4,
-      g = Math.random()*.6 + .4,
-      b = Math.random()*.6 + .4
-    ]);
+  if (Math.random() > .2) {
     this.scale = Math.random() + .5;
     this.phi = Math.random() * 2*pi;
     this.theta = Math.random() * 2*pi
+  }
+  if (Math.random() > .9) {
+
+    this.small.setColor([
+      r = Math.random(),
+      g = Math.random(),
+      b = Math.random(),
+      1
+    ]);
   }
 
 };

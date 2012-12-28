@@ -26,7 +26,7 @@ Util.inherits(Cage, Thing);
 Cage.prototype.advance = function(dt) {};
 
 Cage.prototype.draw = function() {
-  this.parts.apply("draw");
+  this.parts.apply('draw');
 };
 
 Cage.prototype.setMousePoint4 = function(mp4) {

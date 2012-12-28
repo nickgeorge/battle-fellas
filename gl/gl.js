@@ -6,7 +6,7 @@ GL.createGL = function(canvas) {
     gl = canvas.getContext('experimental-webgl');
     gl.viewportWidth = canvas.width;
     gl.viewportHeight = canvas.height;
-  } catch (e) {console.log("Didn't init GL")}
+  } catch (e) {console.log('Didn\'t init GL')}
   gl.mvMatrix = mat4.create();
   gl.pMatrix = mat4.create();
 

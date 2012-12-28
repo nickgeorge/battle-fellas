@@ -1,4 +1,4 @@
-Fella = function(xyz, rgb) {
+Fella = function(xyz, rgba) {
 
   Util.base(this);
   this.position = xyz;
@@ -8,8 +8,8 @@ Fella = function(xyz, rgb) {
   this.alive = true;
   this.target = null;
   this.parts = [];
-
-  this.buildBody(rgb || Vector.randomColor());
+  this.color = rgba || Vector.randomColor(.1);
+  this.buildBody(this.color);
 };
 Util.inherits(Fella, Thing);
 
@@ -32,11 +32,6 @@ Fella.prototype.advance = function(dt) {
 Fella.prototype.aquireTarget = function() {
   this.target = world.theOne || this.getClosestThing();
 };
-
-Fella.prototype.setColorInternal = function(rgb) {
-  this.parts.apply('setColorInternal', rgb);
-};
-
 
 Fella.prototype.advanceAlive = function(dt) {
   this.parts.legAngle += this.speed * this.parts.stepDirection * dt;
@@ -105,13 +100,13 @@ Fella.prototype.draw = function() {
 
   this.transform();
 
-  this.parts.apply("draw");
+  this.parts.apply('draw');
 
   gl.popMatrix();
 };
 
 Fella.prototype.advanceDead = function(dt) {
-  this.parts.apply("advance", dt);
+  this.parts.apply('advance', dt);
 };
 
 Fella.prototype.buildBody = function(rgb) {
@@ -168,11 +163,11 @@ Fella.prototype.shoot = function() {
     s_xy*Math.sin(theta),
     -s*Math.sin(phi)
   ];
-
   var shot = new Arrow(this, v_shot).
       setPosition([this.position[0], this.position[1], 1.5]).
       setTheta(theta).
-      setPhi(phi);
+      setPhi(phi).
+      setColor(this.color);
 
   world.projectiles.push(shot);
 };
@@ -195,6 +190,6 @@ Fella.prototype.center = function() {
   return [
     this.position[0],
     this.position[1],
-    this.position[2] + 1.187
+    this.position[2] + 1.1875
   ];
 };

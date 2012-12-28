@@ -1,6 +1,6 @@
 SmartCrate = function(position) {
   this.theta = Math.random()*2*pi;
-  this.phi = Math.random()*2*pi;
+  this.phi = 0;
   this.position = position;
   this.range = Math.random() * 6;
 
@@ -37,10 +37,10 @@ SmartCrate.prototype.advance = function(dt) {
   if (this.alive) {
     if (!this.target || !this.target.alive) this.aquireTarget();
     if (this.target && this.target.alive) {
-      this.theta = Vector.thetaTo(
-          this.position, this.target.center());
-      this.phi = Vector.phiTo(
-          this.position, this.target.center());
+      // this.theta = Vector.thetaTo(
+      //     this.position, this.target.center());
+      // this.phi = Vector.phiTo(
+      //     this.position, this.target.center());
       if (Math.random() < .005) this.shoot();
     }
     this.progress > 1 && (this.direction = -1);
@@ -72,12 +72,16 @@ SmartCrate.prototype.dispose = function() {
 
 SmartCrate.prototype.shoot = function() {
   var s = 30;
-  var s_xy = Math.cos(pi/2 + this.phi)*s;
+  var theta = Vector.thetaTo(
+      this.position, this.target.center());
+  var phi = Vector.phiTo(
+      this.position, this.target.center());
+  var s_xy = Math.cos(pi/2 + phi)*s;
 
   var v_shot = [
-    -s_xy*Math.cos(this.theta),
-    -s_xy*Math.sin(this.theta),
-    s*Math.sin(pi/2 + this.phi)
+    -s_xy*Math.cos(theta),
+    -s_xy*Math.sin(theta),
+    s*Math.sin(pi/2 + phi)
   ];
   var shot = new Fireball(this, v_shot).
       setPosition([
