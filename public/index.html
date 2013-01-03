@@ -4,6 +4,7 @@
     <meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     
+    <script type='text/javascript' src='socket.io/socket.io.js'></script>
     <script type='text/javascript' src='util/framerate.js'></script>
     <script type='text/javascript' src='util/light.js'></script>
     <script type='text/javascript' src='util/physics.js'></script>
@@ -31,7 +32,7 @@
     <script type='text/javascript' src='ui/crosshair.js'></script>
     <script type='text/javascript' src='camera.js'></script>
     <script type='text/javascript' src='world.js'></script>
-    <script type='text/javascript' src='socket.io/socket.io.js'></script>
+    <script type='text/javascript' src='client.js'></script>
 
     <script id='fragment-shader' type='x-shader/x-fragment'>
       precision mediump float;
@@ -39,7 +40,7 @@
       varying vec2 vTextureCoord;
       varying vec4 vColor;
       varying vec3 vLightWeighting;
-      
+
       uniform bool uUseTexture;
       uniform sampler2D uSampler;
 
@@ -111,8 +112,7 @@
       var gl = null;
       var shaderProgram = null;
       var framerate = null;
-
-      var socket = io.connect('/');
+      var client = null;
 
       function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -130,7 +130,6 @@
         world.applyLights();
 
         crosshair.draw();
-        boxhair.draw();
         camera.transform();
 
         world.draw();
@@ -149,7 +148,7 @@
           if (framerate.rollingAverage < 45) {
             console.log('Low Frame Rate: ' + framerate.rollingAverage)
           }
-          if (framerate.rollingAverage > 75) {
+          if (framerate.rollingAverage > 100) {
             console.log('High Frame Rate: ' + framerate.rollingAverage)            
           }
         }
@@ -180,6 +179,8 @@
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         gl.cullFace(gl.BACK);
 
+        client = new Client();
+
         world = new World();
         world.populate();
         framerate = new Framerate('framerate');
@@ -188,8 +189,7 @@
         camera.setPosition([-0, -50, 2.125]);
         camera.phi = Math.PI/2;
 
-        crosshair = new Crosshair();
-        boxhair = new Box([1, 1, 1]).setColor([1,1,1]);
+        crosshair = new Crosshair();;
 
         requestAnimFrame(tick);
       };

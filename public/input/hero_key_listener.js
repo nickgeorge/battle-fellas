@@ -17,11 +17,11 @@ HeroKeyListener.onKey = function(event) {
     case 65: 
       target.vY = isKeydown ? -target.vRMag : 0;
       break;
-    case 87: 
-      target.vX = isKeydown ? -target.vRMag : 0;
-      break;
     case 68: 
       target.vY = isKeydown ? target.vRMag : 0;
+      break;
+    case 87: 
+      target.vX = isKeydown ? -target.vRMag : 0;
       break;
     case 83: 
       target.vX = isKeydown ? target.vRMag : 0;
