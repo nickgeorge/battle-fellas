@@ -69,6 +69,7 @@ Fella.prototype.advanceAlive = function(dt) {
 
 Fella.prototype.die = function() {
   if (!this.alive) return;
+  Util.base(this, 'die');
   var deathSpeed = 3.5;
   for (var i = 0, part; part = this.parts[i]; i++) {
     var vTheta = Math.random()*2*Math.PI;

@@ -21,6 +21,8 @@ Util.inherits(SmartCrate, Thing);
 SmartCrate.DEFAULT_SPEED = 60;
 
 SmartCrate.prototype.die = function() {
+  
+  Util.base(this, 'die');
   world.thingsToRemove.push(this);
   world.effects.push(this);
   this.box.setColor([1, 1, 1, 1]);

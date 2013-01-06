@@ -14,6 +14,7 @@ Util.inherits(DumbCrate, Thing);
 DumbCrate.DEFAULT_SPEED = 60;
 
 DumbCrate.prototype.die = function() {
+  Util.base(this, 'die');
   world.thingsToRemove.push(this);
   world.effects.push(this);
   this.box.setColor([1, 1, 1, 1]);

@@ -40,6 +40,7 @@ Thing.prototype.setColorInternal = function() {
 };
 
 Thing.prototype.setTribe = function(tribe) {
+  tribe.add(this);
   this.tribe = tribe;
   return this;
 };
@@ -77,4 +78,8 @@ Thing.prototype.getClosestThing = function() {
 
 Thing.prototype.center = function() {
   return this.position;
+};
+
+Thing.prototype.die = function() {
+  this.tribe.remove(this);
 };

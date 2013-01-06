@@ -17,7 +17,7 @@ app.use(function(req, res){
 });
 
 Console.enable();
-socketListener = new SocketListener(server);
+socketServer = new SocketServer(server);
 
 
 server.listen(80);

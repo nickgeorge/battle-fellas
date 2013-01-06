@@ -14,6 +14,8 @@ World = function(theOne) {
   this.thingsToRemove = [];
   this.effectsToRemove = [];
   this.projectilesToRemove = [];
+
+  this.paused = false;
 };
 
 World.prototype.add = function(thing) {
@@ -30,6 +32,9 @@ World.prototype.draw = function() {
 
 World.prototype.advance = function(dt) {
   this.addAndRemoveThings();
+
+  if (this.paused) return;
+
   this.theta += this.rotSpeed * dt;
   this.things.apply('advance', [dt]);
   this.projectiles.apply('advance', [dt]);
@@ -72,17 +77,17 @@ World.prototype.populate = function() {
   //this.board = new Board();
 
   for (var i = 0; i < numFellas; i++) {
-    this.add(Fella.newRandom());
+    this.add(Fella.newRandom().setTribe(Tribe.BURNED_MEN));
   }
   for (var i = 0; i < numDumbCrates; i++) {
-    this.add(DumbCrate.newRandom());
+    this.add(DumbCrate.newRandom().setTribe(Tribe.BURNED_MEN));
   }
   for (var i = 0; i < numSmartCrates; i++) {
-    this.add(SmartCrate.newRandom());
+    this.add(SmartCrate.newRandom().setTribe(Tribe.BURNED_MEN));
   }
 
   if (isPlayer) {
-    this.add(Hero.newRandom());
+    this.add(Hero.newRandom().setTribe(Tribe.STONE_CROWS));
   }
 };
 
@@ -115,9 +120,13 @@ World.prototype.checkCollisions = function() {
         continue;
       }
       if (Collision.check(projectile, thing)) {
-        if (thing.alive) {
-          thing.die();
-          projectile.detonate();
+        if (projectile.parent.tribe == thing.tribe) {
+          this.projectilesToRemove.push(this);
+        } else {
+          if (thing.alive) {
+            thing.die();
+            projectile.detonate();
+          }
         }
       }
     }

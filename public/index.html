@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Board</title>
+    <title>Battle Fellas</title>
     <meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     
@@ -10,6 +10,7 @@
     <script type='text/javascript' src='util/physics.js'></script>
     <script type='text/javascript' src='util/util.js'></script>
     <script type='text/javascript' src='util/vector.js'></script>
+    <script type='text/javascript' src='util/tribe.js'></script>
     <script type='text/javascript' src='gl/gl.js'></script>
     <script type='text/javascript' src='gl/glMatrix-0.9.5.min.js'></script>
     <script type='text/javascript' src='gl/shader_program.js'></script>
@@ -146,10 +147,12 @@
           }
           framerate.snapshot();
           if (framerate.rollingAverage < 45) {
-            console.log('Low Frame Rate: ' + framerate.rollingAverage)
+            console.log('Low Frame Rate: ' + 
+                framerate.rollingAverage)
           }
           if (framerate.rollingAverage > 100) {
-            console.log('High Frame Rate: ' + framerate.rollingAverage)            
+            console.log('High Frame Rate: ' + 
+                framerate.rollingAverage)            
           }
         }
         framerate.lastTime = timeNow;
@@ -165,10 +168,11 @@
         var canvas = document.getElementById('canvas');
         canvas.width = document.width;
         canvas.height = document.height;
-        document.addEventListener(
-            'keydown', HeroKeyListener.onKey, true);
-        document.addEventListener(
-            'keyup', HeroKeyListener.onKey, true);
+        var keyListener = new HeroKeyListener();
+        document.addEventListener('keydown',
+            Util.bind(keyListener.onKey, keyListener), true);
+        document.addEventListener('keyup',
+            Util.bind(keyListener.onKey, keyListener), true);
         gl = GL.createGL(canvas);
         shaderProgram = ShaderProgram.getShaderProgram();
         ImageManager.initTextures();

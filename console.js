@@ -10,13 +10,12 @@ Console = {
     command = command.trim();
     if (command) {
       try {
-        var response = eval(command.trim());
-        response && process.stdout.write(response.toString() + '\n');
+        var response = eval(command);
+        response && Console.log(response);
       } catch(e) {
-        process.stdout.write(e.toString() + '\n');
+        Console.log(e);
       }
     }
-    Console.writePrompt();
   },
 
   writePrompt: function() {
@@ -24,11 +23,11 @@ Console = {
   },
 
   write: function(txt) {
-    process.stdout.write(txt + '\n');
+    process.stdout.write(txt.toString() + '\n');
   },
 
   log: function(txt) {
-    this.write(txt)
-    this.writePrompt();
+    Console.write(txt)
+    Console.writePrompt();
   }
 };

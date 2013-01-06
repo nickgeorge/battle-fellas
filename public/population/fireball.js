@@ -26,9 +26,9 @@ Fireball.prototype.advance = function(dt) {
   if (Math.random() > .9) {
 
     this.small.setColor([
-      r = Math.random(),
-      g = Math.random(),
-      b = Math.random(),
+      Math.random(),
+      Math.random(),
+      Math.random(),
       1
     ]);
   }
