@@ -1,6 +1,6 @@
 GL = function(){}
 
-GL.createGL = function(canvas) {
+GL.createGL = function() {
   var gl;
   try {
     gl = canvas.getContext('experimental-webgl');
@@ -20,6 +20,13 @@ GL.createGL = function(canvas) {
   }
   return gl;
 }
+
+GL.prototype.resize = function() {
+  canvas.width = document.width;
+  canvas.height = document.height;
+  gl.viewportWidth = canvas.width;
+  gl.viewportHeight = canvas.height;
+};
 
 GL.prototype.pushMatrix = function() {
   this.stackIndex++;

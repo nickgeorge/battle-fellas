@@ -62,9 +62,10 @@ World.prototype.populate = function() {
   light.setDirectionalColor([.8, .8, .8]);
   this.addLight(light);
 
-  var numFellas = 15;
+  var haveBadGuys = false;
+  var numSmartCrates = haveBadGuys && 10;
+  var numFellas = haveBadGuys && 15;
   var numDumbCrates = 20;
-  var numSmartCrates = 10;
 
   this.board = new Box([100, 200, 1]).
       setColor([1, 1, 1]).

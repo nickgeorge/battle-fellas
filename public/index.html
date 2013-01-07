@@ -15,7 +15,7 @@
     <script type='text/javascript' src='gl/glMatrix-0.9.5.min.js'></script>
     <script type='text/javascript' src='gl/shader_program.js'></script>
     <script type='text/javascript' src='gl/webgl-utils.js'></script>
-    <script type='text/javascript' src='input/hero_key_listener.js'></script>
+    <script type='text/javascript' src='input/hero_listener.js'></script>
     <script type='text/javascript' src='media/image_manager.js'></script>
     <script type='text/javascript' src='population/thing.js'></script>
     <script type='text/javascript' src='population/arrow.js'></script>
@@ -105,7 +105,8 @@
     </script>
 
     <script type='text/javascript'>
-    
+      
+      var canvas = null;
       var world = null;
       var camera = null;
       var crosshair = null;
@@ -148,11 +149,11 @@
           framerate.snapshot();
           if (framerate.rollingAverage < 45) {
             console.log('Low Frame Rate: ' + 
-                framerate.rollingAverage)
+                framerate.rollingAverage);
           }
           if (framerate.rollingAverage > 100) {
-            console.log('High Frame Rate: ' + 
-                framerate.rollingAverage)            
+            // console.log('High Frame Rate: ' + 
+            //     framerate.rollingAverage);
           }
         }
         framerate.lastTime = timeNow;
@@ -165,15 +166,16 @@
       }
 
       function webGLStart() {
-        var canvas = document.getElementById('canvas');
+        canvas = document.getElementById('canvas');
         canvas.width = document.width;
         canvas.height = document.height;
-        var keyListener = new HeroKeyListener();
-        document.addEventListener('keydown',
-            Util.bind(keyListener.onKey, keyListener), true);
-        document.addEventListener('keyup',
-            Util.bind(keyListener.onKey, keyListener), true);
+
+        var keyListener = new HeroListener(canvas);
+        keyListener.attachEvents();
         gl = GL.createGL(canvas);
+        window.addEventListener('resize',
+            Util.bind(gl.resize, gl));
+
         shaderProgram = ShaderProgram.getShaderProgram();
         ImageManager.initTextures();
 
@@ -201,8 +203,7 @@
   </head>
 
   <body onload='webGLStart();' style='margin: 0px'>
-    <canvas id='canvas' style='border: none; cursor: none'>
-      <div id='framerate'></div>
+    <canvas id='canvas' style='border: none;'>
       Your browser does not support web gl. 
       You know what's awesome? Chrome.
     </canvas>

@@ -6,7 +6,8 @@ SmartCrate = function(position) {
 
   this.start = this.position;
   this.end = this.getEnd();
-  this.progress = Math.random()
+  this.maxProgress = .5 + Math.random() * 1.5;
+  this.progress = Math.random();
   this.direction = 1;
 
   this.alive = true;
@@ -21,7 +22,6 @@ Util.inherits(SmartCrate, Thing);
 SmartCrate.DEFAULT_SPEED = 60;
 
 SmartCrate.prototype.die = function() {
-  
   Util.base(this, 'die');
   world.thingsToRemove.push(this);
   world.effects.push(this);
@@ -39,13 +39,9 @@ SmartCrate.prototype.advance = function(dt) {
   if (this.alive) {
     if (!this.target || !this.target.alive) this.aquireTarget();
     if (this.target && this.target.alive) {
-      // this.theta = Vector.thetaTo(
-      //     this.position, this.target.center());
-      // this.phi = Vector.phiTo(
-      //     this.position, this.target.center());
       if (Math.random() < .005) this.shoot();
     }
-    this.progress > 1 && (this.direction = -1);
+    this.progress > this.maxProgress && (this.direction = -1);
     this.progress < 0 && (this.direction = 1);
     this.progress += this.direction * parseFloat(dt);
     this.position = Vector.sum(this.start, 
