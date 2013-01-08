@@ -2,38 +2,38 @@
   <head>
     <title>Battle Fellas</title>
     <meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel='shortcut icon' href='favicon.ico' type='image/x-icon' />
+    <link rel='stylesheet' href='style.css' type='text/css' />
     
-    <script type='text/javascript' src='socket.io/socket.io.js'></script>
-    <script type='text/javascript' src='util/framerate.js'></script>
-    <script type='text/javascript' src='util/light.js'></script>
-    <script type='text/javascript' src='util/physics.js'></script>
-    <script type='text/javascript' src='util/util.js'></script>
-    <script type='text/javascript' src='util/vector.js'></script>
-    <script type='text/javascript' src='util/tribe.js'></script>
-    <script type='text/javascript' src='gl/gl.js'></script>
-    <script type='text/javascript' src='gl/glMatrix-0.9.5.min.js'></script>
-    <script type='text/javascript' src='gl/shader_program.js'></script>
-    <script type='text/javascript' src='gl/webgl-utils.js'></script>
-    <script type='text/javascript' src='input/hero_listener.js'></script>
-    <script type='text/javascript' src='media/image_manager.js'></script>
-    <script type='text/javascript' src='population/thing.js'></script>
-    <script type='text/javascript' src='population/arrow.js'></script>
-    <script type='text/javascript' src='population/board.js'></script>
-    <script type='text/javascript' src='population/box.js'></script>
-    <script type='text/javascript' src='population/dumb_crate.js'></script>
-    <script type='text/javascript' src='population/fella.js'></script>
-    <script type='text/javascript' src='population/fireball.js'></script>
-    <script type='text/javascript' src='population/hero.js'></script>
-    <script type='text/javascript' src='population/smart_crate.js'></script>
-    <script type='text/javascript' src='population/sphere.js'></script>
-    <script type='text/javascript' src='effects/double_explosion.js'></script>
-    <script type='text/javascript' src='effects/image_cross.js'></script>
-    <script type='text/javascript' src='ui/cage.js'></script>
-    <script type='text/javascript' src='ui/crosshair.js'></script>
-    <script type='text/javascript' src='camera.js'></script>
-    <script type='text/javascript' src='world.js'></script>
-    <script type='text/javascript' src='client.js'></script>
+    <script src='socket.io/socket.io.js'></script>
+    <script src='util/framerate.js'></script>
+    <script src='util/light.js'></script>
+    <script src='util/physics.js'></script>
+    <script src='util/util.js'></script>
+    <script src='util/vector.js'></script>
+    <script src='util/tribe.js'></script>
+    <script src='gl/gl.js'></script>
+    <script src='gl/glMatrix-0.9.5.min.js'></script>
+    <script src='gl/shader_program.js'></script>
+    <script src='gl/webgl-utils.js'></script>
+    <script src='input/hero_listener.js'></script>
+    <script src='media/image_manager.js'></script>
+    <script src='population/thing.js'></script>
+    <script src='population/arrow.js'></script>
+    <script src='population/board.js'></script>
+    <script src='population/box.js'></script>
+    <script src='population/dumb_crate.js'></script>
+    <script src='population/fella.js'></script>
+    <script src='population/fireball.js'></script>
+    <script src='population/hero.js'></script>
+    <script src='population/smart_crate.js'></script>
+    <script src='population/sphere.js'></script>
+    <script src='effects/double_explosion.js'></script>
+    <script src='effects/image_cross.js'></script>
+    <script src='ui/crosshair.js'></script>
+    <script src='ui/camera.js'></script>
+    <script src='world.js'></script>
+    <script src='client.js'></script>
 
     <script id='fragment-shader' type='x-shader/x-fragment'>
       precision mediump float;
@@ -104,16 +104,15 @@
       }
     </script>
 
-    <script type='text/javascript'>
-      
-      var canvas = null;
-      var world = null;
-      var camera = null;
-      var crosshair = null;
-      var isPlayer = true;
+    <script>
+
+      var context2d = null;
       var gl = null;
       var shaderProgram = null;
       var framerate = null;
+      var world = null;
+      var camera = null;
+      var crosshair = null;
       var client = null;
 
       function drawScene() {
@@ -135,6 +134,10 @@
         camera.transform();
 
         world.draw();
+
+        context2d.font = '40px arial';
+        context2d.fillStyle = '#F00';
+        context2d.fillText('TEXT!', 50, 50);
       }
 
       function animate() {
@@ -166,24 +169,22 @@
       }
 
       function webGLStart() {
-        canvas = document.getElementById('canvas');
-        canvas.width = document.width;
-        canvas.height = document.height;
+        var glCanvas = document.getElementById('gl-canvas');
+        gl = GL.createGL(glCanvas);
 
-        var keyListener = new HeroListener(canvas);
-        keyListener.attachEvents();
-        gl = GL.createGL(canvas);
+        var hudCanvas = document.getElementById('hud-canvas');
+        context2d = hudCanvas.getContext('2d');        
+
         window.addEventListener('resize',
-            Util.bind(gl.resize, gl));
+            Util.partial(resize, glCanvas, hudCanvas, gl));
+        resize(glCanvas, hudCanvas, gl);
+
+        var gameDiv = document.getElementById('game-div');
+        var keyListener = new HeroListener(gameDiv);
+        keyListener.attachEvents();
 
         shaderProgram = ShaderProgram.getShaderProgram();
         ImageManager.initTextures();
-
-        gl.enable(gl.DEPTH_TEST);
-        gl.enable(gl.BLEND)
-        gl.enable(gl.CULL_FACE);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        gl.cullFace(gl.BACK);
 
         client = new Client();
 
@@ -195,18 +196,30 @@
         camera.setPosition([-0, -50, 2.125]);
         camera.phi = Math.PI/2;
 
-        crosshair = new Crosshair();;
+        crosshair = new Crosshair();
 
         requestAnimFrame(tick);
+      };
+
+      function resize(glCanvas, hudCanvas, gl) {
+        glCanvas.width = document.width;
+        glCanvas.height = document.height;
+        hudCanvas.width = glCanvas.width;
+        hudCanvas.height = glCanvas.height;
+        gl.viewportWidth = glCanvas.width;
+        gl.viewportHeight = glCanvas.height;
       };
     </script>
   </head>
 
   <body onload='webGLStart();' style='margin: 0px'>
-    <canvas id='canvas' style='border: none;'>
-      Your browser does not support web gl. 
-      You know what's awesome? Chrome.
-    </canvas>
+    <div id='game-div'>
+      <canvas id='gl-canvas' style='border: none;'>
+        Your browser does not support web gl. 
+        You know what's awesome? Chrome.
+      </canvas>
+      <canvas id='hud-canvas'></canvas>
+    </div>
   </body>
 
 </html>

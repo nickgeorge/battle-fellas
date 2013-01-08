@@ -11,14 +11,7 @@ ShaderProgram.getShader = function(gl, id) {
     return null;
   }
 
-  var str = '';
-  var k = shaderScript.firstChild;
-  while (k) {
-    if (k.nodeType == 3) {
-      str += k.textContent;
-    }
-    k = k.nextSibling;
-  }
+  var str = shaderScript.firstChild.textContent;
 
   var shader;
   if (shaderScript.type == 'x-shader/x-fragment') {

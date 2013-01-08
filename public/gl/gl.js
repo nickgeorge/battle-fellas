@@ -1,6 +1,6 @@
 GL = function(){}
 
-GL.createGL = function() {
+GL.createGL = function(canvas) {
   var gl;
   try {
     gl = canvas.getContext('experimental-webgl');
@@ -14,19 +14,20 @@ GL.createGL = function() {
   gl.stackIndex = -1;
   
   gl.normalMatrix = mat3.create();
+  gl.canvas = canvas;
 
   for (var key in GL.prototype) {
     gl[key] = GL.prototype[key];
   }
+
+  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.BLEND)
+  gl.enable(gl.CULL_FACE);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.cullFace(gl.BACK);
+        
   return gl;
 }
-
-GL.prototype.resize = function() {
-  canvas.width = document.width;
-  canvas.height = document.height;
-  gl.viewportWidth = canvas.width;
-  gl.viewportHeight = canvas.height;
-};
 
 GL.prototype.pushMatrix = function() {
   this.stackIndex++;

@@ -36,7 +36,8 @@ KeyCode = {
   D: 68,
   S: 83,
   W: 87,
-  C: 67
+  C: 67,
+  F: 70
 };  
 
 HeroListener.prototype.attachEvents = function() {
@@ -154,6 +155,10 @@ HeroListener.prototype.onKey = function(event) {
       break;
     case KeyCode.P:
       world.paused = !world.paused;
+      break;
+    case KeyCode.F:
+      this.canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      break;
     default:
       console.log(event.keyCode); 
       return;

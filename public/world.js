@@ -87,9 +87,7 @@ World.prototype.populate = function() {
     this.add(SmartCrate.newRandom().setTribe(Tribe.BURNED_MEN));
   }
 
-  if (isPlayer) {
-    this.add(Hero.newRandom().setTribe(Tribe.STONE_CROWS));
-  }
+  this.add(Hero.newRandom().setTribe(Tribe.STONE_CROWS));
 };
 
 World.prototype.inBounds = function(xyz) {

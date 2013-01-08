@@ -7,8 +7,6 @@ Hero = function(xyz, rgb) {
   this.vY = 0;
   this.vTheta = 0;
   this.vPhi = 0;
-  this.theta = 0;
-  this.phi = 0;
 
   this.vPhiMag = 5/12*pi;
   this.vThetaMag = 5/12*pi;
@@ -19,7 +17,7 @@ Hero = function(xyz, rgb) {
 Util.inherits(Hero, Fella);
 
 Hero.prototype.aquireTarget = function() {
-  this.target = this.getClosestThing();
+  // Heroes aquire their OWN target!
 };
 
 Hero.prototype.advance = function(dt) {
@@ -55,21 +53,12 @@ Hero.prototype.advanceAlive = function(dt) {
   }
 };
 
-Hero.prototype.center = function() {
-  var fellaCenter = Util.base(this, 'center');
-  return [
-    fellaCenter[0],
-    fellaCenter[1],
-    fellaCenter[2]
-  ]; 
-};
-
 Hero.prototype.eyeLevel = function() {
-  var fellaCenter = this.center();
+  var fellaEyeLevel = Util.base(this, 'eyeLevel');
   return [
-    fellaCenter[0],
-    fellaCenter[1],
-    fellaCenter[2] + .9375 - Math.sin(this.bob)/3.5
+    fellaEyeLevel[0],
+    fellaEyeLevel[1],
+    fellaEyeLevel[2] - Math.sin(this.bob)/3.5
   ]; 
 };
 

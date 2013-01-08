@@ -51,19 +51,15 @@ Fella.prototype.advanceAlive = function(dt) {
 
   if (this.position[0] > world.board.max(0)) {
     this.position[0] = world.board.max(0);
-    this.theta += Math.PI;
   }
   if (this.position[0] < world.board.min(0)) {
     this.position[0] = world.board.min(0);
-    this.theta += Math.PI;
   }
   if (this.position[1] > world.board.max(1)) {
     this.position[1] = world.board.max(1);
-    this.theta += Math.PI;
   }
   if (this.position[1] < world.board.min(1)) {
     this.position[1] = world.board.min(1);
-    this.theta += Math.PI;
   }
 };
 
@@ -193,4 +189,13 @@ Fella.prototype.center = function() {
     this.position[1],
     this.position[2] + 1.1875
   ];
+};
+
+Fella.prototype.eyeLevel = function() {
+  var fellaCenter = this.center();
+  return [
+    fellaCenter[0],
+    fellaCenter[1],
+    fellaCenter[2] + .9375
+  ]; 
 };
