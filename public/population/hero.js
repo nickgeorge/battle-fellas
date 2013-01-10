@@ -1,7 +1,5 @@
 Hero = function(xyz, rgb) {
   Util.base(this, xyz, rgb);
-  this.draw = function(){};
-  world.theOne = this;
 
   this.vX = 0;
   this.vY = 0;
@@ -15,6 +13,8 @@ Hero = function(xyz, rgb) {
   this.bob = 0;
 };
 Util.inherits(Hero, Fella);
+
+Hero.prototype.draw = function() {};
 
 Hero.prototype.aquireTarget = function() {
   // Heroes aquire their OWN target!
@@ -81,6 +81,7 @@ Hero.prototype.shoot = function() {
 };
 
 Hero.prototype.die = function() { 
+  this.tribe.remove(this);
   world.things = [];
   world.effects = [];
   world.projectiles = [];

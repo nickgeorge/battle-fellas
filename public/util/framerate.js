@@ -5,7 +5,7 @@ Framerate = function(id) {
   this.id = id;
 
   this.renderTime = -1;
-  this.framerates = [ ];
+  this.framerates = [];
   this.rollingAverage = 0;
   self = this;
   var fr = function() { self.calcRollingAverage() }

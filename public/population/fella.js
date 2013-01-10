@@ -30,7 +30,7 @@ Fella.prototype.advance = function(dt) {
 };
 
 Fella.prototype.aquireTarget = function() {
-  this.target = world.theOne || this.getClosestThing();
+  this.target = Tribe.getRandomEnemy(this.tribe);
 };
 
 Fella.prototype.advanceAlive = function(dt) {

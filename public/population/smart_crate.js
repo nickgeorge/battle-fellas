@@ -52,7 +52,7 @@ SmartCrate.prototype.advance = function(dt) {
 };
 
 SmartCrate.prototype.aquireTarget = function() {
-  this.target = world.theOne || this.getClosestThing();
+  this.target = Tribe.getRandomEnemy(this.tribe);
 };
 
 SmartCrate.prototype.draw = function() {

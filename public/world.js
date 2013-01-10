@@ -1,4 +1,4 @@
-World = function(theOne) {
+World = function() {
   this.things = [];
   this.projectiles = [];
   this.effects = [];
@@ -8,8 +8,6 @@ World = function(theOne) {
   this.board = null;
   this.G = 30;
   this.clearColorRgba = [0, 0, 0, 1];
-
-  this.theOne = theOne;
 
   this.thingsToRemove = [];
   this.effectsToRemove = [];
@@ -62,7 +60,7 @@ World.prototype.populate = function() {
   light.setDirectionalColor([.8, .8, .8]);
   this.addLight(light);
 
-  var haveBadGuys = false;
+  var haveBadGuys = true;
   var numSmartCrates = haveBadGuys && 10;
   var numFellas = haveBadGuys && 15;
   var numDumbCrates = 20;
@@ -76,18 +74,22 @@ World.prototype.populate = function() {
       });
 
   //this.board = new Board();
+  Tribe.MOON_BROTHERS.neutral = true;
+  for (var i = 0; i < numDumbCrates; i++) {
+    this.add(DumbCrate.newRandom().setTribe(Tribe.MOON_BROTHERS));
+  }
 
   for (var i = 0; i < numFellas; i++) {
     this.add(Fella.newRandom().setTribe(Tribe.BURNED_MEN));
-  }
-  for (var i = 0; i < numDumbCrates; i++) {
-    this.add(DumbCrate.newRandom().setTribe(Tribe.BURNED_MEN));
   }
   for (var i = 0; i < numSmartCrates; i++) {
     this.add(SmartCrate.newRandom().setTribe(Tribe.BURNED_MEN));
   }
 
-  this.add(Hero.newRandom().setTribe(Tribe.STONE_CROWS));
+  var hero = Hero.newRandom().setTribe(Tribe.STONE_CROWS);
+  this.add(hero);
+  hud.setHero(hero);
+  camera.anchor = hero;
 };
 
 World.prototype.inBounds = function(xyz) {

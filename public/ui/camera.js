@@ -13,6 +13,8 @@ Camera = function() {
   this.vRMag = 20;
 
   this.bob = 0;
+
+  this.anchor = null;
 };
 
 Camera.prototype.advance = function(dt) {
@@ -28,10 +30,9 @@ Camera.prototype.advance = function(dt) {
 };
 
 Camera.prototype.transform = function() {
-  var anchor = world.theOne;
-  mat4.rotate(gl.mvMatrix, -anchor.phi - pi/2, [1, 0, 0]);
-  mat4.rotate(gl.mvMatrix, -anchor.theta + pi/2, [0, 0, 1]);
-  var position = anchor.eyeLevel();
+  mat4.rotate(gl.mvMatrix, -this.anchor.phi - pi/2, [1, 0, 0]);
+  mat4.rotate(gl.mvMatrix, -this.anchor.theta + pi/2, [0, 0, 1]);
+  var position = this.anchor.eyeLevel();
   mat4.translate(gl.mvMatrix, [
     -position[0], 
     -position[1], 

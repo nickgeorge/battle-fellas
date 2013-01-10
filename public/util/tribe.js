@@ -3,6 +3,7 @@ Tribe = function(name, leader, index) {
   this.leader = leader;
   this.index = index;
   this.members = [];
+  this.neutral = false;
 };
 
 Tribe.BURNED_MEN = new Tribe('Burned Men',
@@ -28,7 +29,7 @@ Tribe.get = function(index) {
 Tribe.getRandomEnemy = function(allies) {
   var total = 0;
   for (var i = 0, tribe; tribe = Tribe.LIST_[i]; i++) {
-    if (tribe != allies) total += tribe.members.length;
+    if (tribe != allies && !tribe.neutral) total += tribe.members.length;
   }
   var index = parseInt(Math.random() * total);
   var tribeIndex = 0;
@@ -36,13 +37,25 @@ Tribe.getRandomEnemy = function(allies) {
   var enemy;
   while (index >= totalSoFar) {
     var tribe = Tribe.LIST_[tribeIndex++];
-    if (tribe == allies) continue;
+    if (tribe == allies || tribe.neutral) continue;
     if (enemy = tribe.members[index - totalSoFar]) {
       break;
     }
     totalSoFar += tribe.members.length;
   }
   return enemy;
+};
+
+Tribe.prototype.getEnemyCount = function() {
+  var total = 0;
+  for (var i = 0, tribe; tribe = Tribe.LIST_[i]; i++) {
+    if (tribe != this && !tribe.neutral) total += tribe.members.length;
+  }
+  return total;
+};
+
+Tribe.prototype.size = function() {
+  return this.members.length;
 };
 
 Tribe.prototype.add = function(thing) {

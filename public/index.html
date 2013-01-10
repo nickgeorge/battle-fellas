@@ -32,6 +32,7 @@
     <script src='effects/image_cross.js'></script>
     <script src='ui/crosshair.js'></script>
     <script src='ui/camera.js'></script>
+    <script src='ui/hud.js'></script>
     <script src='world.js'></script>
     <script src='client.js'></script>
 
@@ -106,7 +107,6 @@
 
     <script>
 
-      var context2d = null;
       var gl = null;
       var shaderProgram = null;
       var framerate = null;
@@ -135,9 +135,7 @@
 
         world.draw();
 
-        context2d.font = '40px arial';
-        context2d.fillStyle = '#F00';
-        context2d.fillText('TEXT!', 50, 50);
+        hud.render();
       }
 
       function animate() {
@@ -172,8 +170,7 @@
         var glCanvas = document.getElementById('gl-canvas');
         gl = GL.createGL(glCanvas);
 
-        var hudCanvas = document.getElementById('hud-canvas');
-        context2d = hudCanvas.getContext('2d');        
+        var hudCanvas = document.getElementById('hud-canvas');     
 
         window.addEventListener('resize',
             Util.partial(resize, glCanvas, hudCanvas, gl));
@@ -188,13 +185,15 @@
 
         client = new Client();
 
-        world = new World();
-        world.populate();
+        camera = new Camera();
+        camera.phi = Math.PI/2;
+
         framerate = new Framerate('framerate');
 
-        camera = new Camera();
-        camera.setPosition([-0, -50, 2.125]);
-        camera.phi = Math.PI/2;
+        hud = new HUD(hudCanvas, camera, keyListener, framerate);   
+
+        world = new World();
+        world.populate();
 
         crosshair = new Crosshair();
 
@@ -212,12 +211,9 @@
     </script>
   </head>
 
-  <body onload='webGLStart();' style='margin: 0px'>
+  <body onload='webGLStart();'>
     <div id='game-div'>
-      <canvas id='gl-canvas' style='border: none;'>
-        Your browser does not support web gl. 
-        You know what's awesome? Chrome.
-      </canvas>
+      <canvas id='gl-canvas'></canvas>
       <canvas id='hud-canvas'></canvas>
     </div>
   </body>

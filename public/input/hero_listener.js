@@ -5,6 +5,8 @@ HeroListener = function(canvas) {
   this.sensitivityX = .0035;
   this.sensitivityY = .0035;
 
+  this.hero = null;
+
   this.canLockPointer = 'pointerLockElement' in document ||
     'mozPointerLockElement' in document ||
     'webkitPointerLockElement' in document;
@@ -25,8 +27,8 @@ HeroListener = function(canvas) {
 
 // Why would anyone expect the language to have this built in?
 KeyCode = {
+  CTRL: 17,
   SPACE: 32,
-  P: 80,
   
   LEFT: 37,
   UP: 38,
@@ -37,7 +39,9 @@ KeyCode = {
   S: 83,
   W: 87,
   C: 67,
-  F: 70
+  F: 70,
+  R: 82,
+  P: 80
 };  
 
 HeroListener.prototype.attachEvents = function() {
@@ -68,7 +72,7 @@ HeroListener.prototype.onMouseDown = function(e) {
     e.preventDefault();
     return;
   }
-  world.theOne.shoot();
+  this.hero && this.hero.shoot();
 };
 
 HeroListener.prototype.enableMouseLock = function() {
@@ -81,6 +85,7 @@ HeroListener.prototype.enableMouseLock = function() {
 };
 
 HeroListener.prototype.onMouseMove = function(event) {
+  if (!this.hero) return;
   if (this.mouseIsLocked) {
     var movementX = event.movementX ||
         event.mozMovementX ||
@@ -91,8 +96,8 @@ HeroListener.prototype.onMouseMove = function(event) {
         event.webkitMovementY ||
         0;
 
-    world.theOne.theta -= movementX * this.sensitivityX;
-    world.theOne.phi -= movementY * this.sensitivityY;
+    this.hero.theta -= movementX * this.sensitivityX;
+    this.hero.phi -= movementY * this.sensitivityY;
   }
 };
 
@@ -116,7 +121,7 @@ HeroListener.prototype.onKey = function(event) {
     this.keyMap[keyCode] = false;
   }
 
-  var target = world.theOne;
+  var target = this.hero;
   switch (keyCode) {
     case KeyCode.A: 
       target.vY = isKeydown ? -target.vRMag : 
@@ -158,6 +163,11 @@ HeroListener.prototype.onKey = function(event) {
       break;
     case KeyCode.F:
       this.canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      break;
+    case KeyCode.R:
+      if (this.keyMap[KeyCode.CTRL]) return;
+      isKeydown && (hud.isRendering = !hud.isRendering);
+      hud.clear();
       break;
     default:
       console.log(event.keyCode); 

@@ -1,10 +1,10 @@
-Thing = function(proto) {
-  !proto && (proto = {});
-  this.phi = proto.phi || 0;
-  this.theta = proto.theta || 0;
-  this.position = proto.position || [0, 0, 0];
-  this.fulcrum = proto.fulcrum || null;
-  this.color = proto.color || [0, 0, 0, 0];
+Thing = function() {
+  this.phi =  0;
+  this.theta = 0;
+  this.position = [0, 0, 0];
+  this.fulcrum = null;
+  this.color =[0, 0, 0, 0];
+  this.tribe = null;
 };
 
 Thing.prototype.setTheta = function(theta) {
@@ -66,7 +66,10 @@ Thing.prototype.getClosestThing = function() {
   var minDistance = Number.MAX_VALUE;
   var closestThing = null;
   for (var i = 0, thing; thing = world.things[i]; i++) {
-    if (!thing.alive || this == thing) continue;
+    if (!thing.alive || this == thing ||
+        (this.tribe && this.tribe == thing.tribe)) {
+      continue;
+    }
     var d = Vector.distanceSquared(this.position, thing.position);
     if (d < minDistance) {
       minDistance = d;
