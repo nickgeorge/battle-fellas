@@ -46,10 +46,20 @@ Tribe.getRandomEnemy = function(allies) {
   return enemy;
 };
 
+Tribe.clear = function(opt_tribesToWipe) {
+  var tribesToWipe = opt_tribesToWipe || Tribe.LIST_;
+  for (var i = 0, tribe; tribe = tribesToWipe[i]; i++) {
+    console.log(tribe);
+    tribe.members = [];
+    console.log(tribe)
+    console.log("\n\n\n");
+  }
+};
+
 Tribe.prototype.getEnemyCount = function() {
   var total = 0;
   for (var i = 0, tribe; tribe = Tribe.LIST_[i]; i++) {
-    if (tribe != this && !tribe.neutral) total += tribe.members.length;
+    if (tribe != this && !tribe.neutral) total += tribe.size();
   }
   return total;
 };

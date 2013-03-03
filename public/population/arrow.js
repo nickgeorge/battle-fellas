@@ -1,5 +1,5 @@
 Arrow = function(parent, speed) {
-  this.super();
+  Util.base(this);
   this.speed = speed;
   this.parent = parent;
   this.position = [0, 0, 0];
@@ -7,6 +7,9 @@ Arrow = function(parent, speed) {
       setColor([.7, 1, .7]);
 
   this.parts = [this.shaft];
+
+  this.klass = "Arrow";
+  this.outerRadius = 1.51;
 };
 Util.inherits(Arrow, Thing);
 
@@ -16,12 +19,14 @@ Arrow.prototype.advance = function(dt) {
   for (var i = 0; i < 3; i++) {
     this.position[i] += this.speed[i]*dt;
   }
-  if (this.position[2] > 0 || !world.inBounds(this.position) ) {
+  var groundLevel = world.board.getHeight(this.position[0], this.position[1]);
+  if (this.position[2] > groundLevel || !world.inBounds(this.position) ) {
     this.phi = -Math.atan2(this.speed[2], this.groundspeed());
     this.speed[2] -= world.G*dt;
   } else {
     this.speed = [0, 0, 0];
-    this.position[2] = 0
+    // TODO: pull this up to ground level.
+    //this.position[2] = groundLevel;
   }
 };
 

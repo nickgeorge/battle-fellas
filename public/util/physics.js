@@ -22,7 +22,8 @@ Collision.closeEnough = function(thingA, thingB) {
   var d_x = centerA[0] - centerB[0];
   var d_y = centerA[1] - centerB[1];
   var d_z = centerA[2] - centerB[2];
-  return d_x*d_x + d_y*d_y + d_z*d_z < 5;
+  return d_x*d_x + d_y*d_y + d_z*d_z < 
+      thingA.getOuterRadius() + thingB.getOuterRadius();
 };
 
 // TODO: worst. collision algorithm. ever. 

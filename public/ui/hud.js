@@ -9,8 +9,9 @@ HUD = function(canvas, camera, listener, framerate) {
 
   this.widgets = [];
 
-  this.widgets.push(new GuysLeft(this.context, 25, 25));
-  this.widgets.push(new Fraps(this.context, -100, 25, framerate));
+  this.widgets.push(new GuysLeft(this.context, 25, -250));
+  this.widgets.push(new Fraps(this.context, -250, 25, framerate));
+  this.widgets.push(new AmmoCounter(this.context, 25, -200, framerate));
 };
 
 HUD.prototype.render = function() {
@@ -53,8 +54,8 @@ GuysLeft = function(context, x, y) {
 Util.inherits(GuysLeft, Widget);
 
 GuysLeft.prototype.render = function(hero) {
-  this.context.font = '16px courier';
-  this.context.fillStyle = '#F00';
+  this.context.font = '24px courier';
+  this.context.fillStyle = '#F99';
   var position = this.position();
   this.context.fillText('Guys Left: ' + 
       (hero.tribe.getEnemyCount()),
@@ -73,5 +74,22 @@ Fraps.prototype.render = function(hero) {
   this.context.fillStyle = fraps < 45 ? '#F00' : '#0F0';
   var position = this.position();
   this.context.fillText('Fraps: ' + fraps,
+      position[0], position[1]);
+};
+
+AmmoCounter = function(context, x, y) {
+  Util.base(this, context, x, y);
+};
+Util.inherits(AmmoCounter, Widget);
+
+AmmoCounter.prototype.render = function(hero) {
+  this.context.font = 'bold 24px courier';
+  this.context.fillStyle = '#F0F';
+  var position = this.position();
+  this.context.fillText('Arrows: ' + hero.ammo.arrows,
+      position[0], position[1]);
+
+  this.context.fillStyle = '#000';
+  this.context.strokeText('Arrows: ' + hero.ammo.arrows,
       position[0], position[1]);
 };

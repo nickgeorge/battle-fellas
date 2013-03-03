@@ -5,9 +5,12 @@ DumbCrate = function(position) {
   this.alive = true;
   this.box = new Box([1, 1, 1]).
       setColor([1, 1, 1]).
-      setTexture(ImageManager.Textures.CRATE, true);
+      setTexture(Textures.CRATE, true);
 
   this.parts = [this.box];
+
+  this.outerRadius = .867;
+  this.klass = "DumbCrate";
 };
 Util.inherits(DumbCrate, Thing);
 
@@ -15,6 +18,7 @@ DumbCrate.DEFAULT_SPEED = 60;
 
 DumbCrate.prototype.die = function() {
   Util.base(this, 'die');
+
   world.thingsToRemove.push(this);
   world.effects.push(this);
   this.box.setColor([1, 1, 1, 1]);
@@ -42,11 +46,13 @@ DumbCrate.prototype.dispose = function() {
 };
 
 DumbCrate.newRandom = function() {
+  var x = Math.random()*world.board.size[0] + world.board.min(0);
+  var y = Math.random()*world.board.size[1] + world.board.min(1);
   return new DumbCrate([1, 1, 1]).
       setTheta(Math.random() * Math.PI*2).
       setPosition([
-        Math.random()*world.board.size[0] + world.board.min(0),
-        Math.random()*world.board.size[1] + world.board.min(1),
-        Math.random()*10 + 10
+        x,
+        y,
+        world.board.getHeight(x, y) + Math.random(10) + 5
       ]);
 };

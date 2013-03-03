@@ -2,8 +2,8 @@ Console = {
   enable: function() {
     process.stdin.setEncoding('utf8');
     process.stdin.resume();
-    process.stdin.on('data', this.processCommand);
-    Console.writePrompt();
+    process.stdin.on('data',  bind(this.processCommand, this));
+    this.writePrompt();
   },
 
   processCommand: function(command) {
@@ -11,10 +11,12 @@ Console = {
     if (command) {
       try {
         var response = eval(command);
-        response && Console.log(response);
+        response && this.log(response);
       } catch(e) {
-        Console.log(e);
+        this.log(e);
       }
+    } else {
+      this.writePrompt();
     }
   },
 
@@ -27,7 +29,7 @@ Console = {
   },
 
   log: function(txt) {
-    Console.write(txt)
-    Console.writePrompt();
+    this.write(txt)
+    this.writePrompt();
   }
 };

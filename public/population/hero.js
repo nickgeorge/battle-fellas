@@ -11,6 +11,12 @@ Hero = function(xyz, rgb) {
   this.vRMag = 20;
 
   this.bob = 0;
+  this.ammo = {
+    arrows: 15,
+    rails: 10
+  };
+
+  this.klass = "Hero";
 };
 Util.inherits(Hero, Fella);
 
@@ -37,20 +43,21 @@ Hero.prototype.advanceAlive = function(dt) {
   this.position[0] -= Math.cos(this.theta)*this.vX*dt -
       Math.sin(this.theta)*this.vY*dt;
   this.position[1] -= Math.sin(this.theta)*this.vX*dt + 
-      Math.cos(this.theta)*this.vY*dt;  
+      Math.cos(this.theta)*this.vY*dt;
 
   if (this.position[0] > world.board.max(0)) {
-    this.position[0] = world.board.max(0);
+    this.position[0] = world.board.max(0) - 0.0001;
   }
   if (this.position[0] < world.board.min(0)) {
-    this.position[0] = world.board.min(0);
+    this.position[0] = world.board.min(0) + 0.0001;
   }
   if (this.position[1] > world.board.max(1)) {
-    this.position[1] = world.board.max(1);
+    this.position[1] = world.board.max(1) - 0.0001;
   }
   if (this.position[1] < world.board.min(1)) {
-    this.position[1] = world.board.min(1);
+    this.position[1] = world.board.min(1) + 0.0001;
   }
+  this.position[2] = world.board.getHeight(this.position[0], this.position[1]);
 };
 
 Hero.prototype.eyeLevel = function() {
@@ -62,7 +69,10 @@ Hero.prototype.eyeLevel = function() {
   ]; 
 };
 
-Hero.prototype.shoot = function() {
+Hero.prototype.shootArrow = function() {
+  if (this.ammo.arrows <= 0) return;
+
+  this.ammo.arrows--;
   var s = Arrow.DEFAULT_SPEED*1.5;
   var s_xy =  Math.cos(this.phi)*s;
 
@@ -78,14 +88,16 @@ Hero.prototype.shoot = function() {
       setColor([1, 1, 1]);
 
   world.projectiles.push(shot);
+  SoundManager.play(SoundManager.ARROW);
+};
+
+Hero.prototype.shootRail = function() {
+  if (this.ammo.rails <= 0) return;
 };
 
 Hero.prototype.die = function() { 
   this.tribe.remove(this);
-  world.things = [];
-  world.effects = [];
-  world.projectiles = [];
-  world.populate();
+  world.reset();
 };
 
 Hero.newRandom = function() {

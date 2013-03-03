@@ -13,9 +13,12 @@ SmartCrate = function(position) {
   this.alive = true;
   this.box = new Box([1, 1, 1]).
       setColor([1, 1, 1]).
-      setTexture(ImageManager.Textures.QUESTION, true);
+      setTexture(Textures.QUESTION, true);
 
   this.parts = [this.box];
+
+  this.outerRadius = .867;
+  this.klass = "SmartCrate";
 };
 Util.inherits(SmartCrate, Thing);
 
@@ -71,9 +74,9 @@ SmartCrate.prototype.dispose = function() {
 SmartCrate.prototype.shoot = function() {
   var s = 30;
   var theta = Vector.thetaTo(
-      this.position, this.target.center());
+      this.position, this.target.eyeLevel());
   var phi = Vector.phiTo(
-      this.position, this.target.center());
+      this.position, this.target.eyeLevel());
   var s_xy = Math.cos(pi/2 + phi)*s;
 
   var v_shot = [
@@ -96,17 +99,24 @@ SmartCrate.prototype.getEnd = function() {
   var phi = Math.random() * 2 * pi;
   var range_xy =  Math.cos(phi)*this.range;
 
+  var endX = this.start[0] + range_xy*Math.cos(theta);
+  var endY = this.start[1] + range_xy*Math.sin(theta);
+
   return [
-    this.start[0] + range_xy*Math.cos(theta),
-    this.start[1] + range_xy*Math.sin(theta),
-    Math.max(2, this.start[2] + this.range*Math.sin(phi))
+    endX,
+    endY,
+    Math.max(
+      world.board.getHeight(endX, endY) + 2, 
+      this.start[2] + this.range*Math.sin(phi))
   ];
 };
 
 SmartCrate.newRandom = function() {
+  var x = Math.random()*world.board.size[0] + world.board.min(0);
+  var y = world.board.max(1) - Math.random() * world.board.size[1] / 1.5;
   return new SmartCrate([
-    Math.random()*world.board.size[0] + world.board.min(0),
-    world.board.max(1) - Math.random() * world.board.size[1] / 2,
-    Math.random()*10 + 2
+    x,
+    y,
+    Math.random()*10 + 2 + world.board.getHeight(x, y)
   ]);
 };

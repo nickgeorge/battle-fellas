@@ -4,21 +4,21 @@ DoubleExplosion = function(size, smallColor, bigColor, callback) {
   this.size = size;
   this.small = new ImageCross().
       setColor(smallColor || [1, 0, 0]).
-      setTexture(ImageManager.Textures.SPARK, true);
+      setTexture(Textures.SPARK, true);
 
   this.big = new ImageCross().
       setColor(bigColor || [1, 1, 0]).
-      setTexture(ImageManager.Textures.ENERGY, true);
+      setTexture(Textures.ENERGY, true);
 
   this.callback = callback;
 };
 Util.inherits(DoubleExplosion, Thing);
 
 DoubleExplosion.prototype.advance = function(dt) {
-  this.size += this.initialSize*20 * dt;
+this.size += this.initialSize*20 * dt;
   if (this.size > this.initialSize*5) {
     world.effectsToRemove.push(this);
-    if (this.callback) this.callback();
+    this.callback && this.callback();
   }
 };
 

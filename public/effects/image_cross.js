@@ -23,7 +23,7 @@ ImageCross.prototype.draw = function() {
 
   if (this.texture && this.texture.loaded) {
     gl.uniform1i(shaderProgram.useTextureUniform, true);
-    ImageManager.bindTexture(this.texture);
+    Textures.bindTexture(this.texture);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, this.textureBuffer.itemSize, gl.FLOAT, false, 0, 0);
   };

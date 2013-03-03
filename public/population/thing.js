@@ -5,6 +5,9 @@ Thing = function() {
   this.fulcrum = null;
   this.color =[0, 0, 0, 0];
   this.tribe = null;
+
+  this.klass = "Thing";
+  this.outerRadius = null;
 };
 
 Thing.prototype.setTheta = function(theta) {
@@ -18,8 +21,12 @@ Thing.prototype.setPhi = function(phi) {
   return this;
 };
 
-Thing.prototype.setPosition = function(xyz) {
-  this.position = [xyz[0], xyz[1], xyz[2]];
+Thing.prototype.setPosition = function(a, b, c) {
+  if (a.length == 3) {
+    this.position = [a[0], a[1], a[2]];
+  } else {
+    this.position = [a, b, c];
+  }
   return this;
 };
 
@@ -35,25 +42,10 @@ Thing.prototype.setColor = function(rgba) {
   return this;
 };
 
-Thing.prototype.setColorInternal = function() {
-  throw 'Set Color Internal unimplemented for ' + this
-};
-
 Thing.prototype.setTribe = function(tribe) {
   tribe.add(this);
   this.tribe = tribe;
   return this;
-};
-
-Thing.prototype.draw = function() {
-  throw 'Draw unimplemented for type ' +
-      this.constructor;
-
-};
-
-Thing.prototype.advance = function() {
-  throw 'Advance unimplemented for type ' +
-      this.constructor;
 };
 
 Thing.prototype.transform = function() {
@@ -85,4 +77,24 @@ Thing.prototype.center = function() {
 
 Thing.prototype.die = function() {
   this.tribe.remove(this);
+};
+
+Thing.prototype.setColorInternal = function() {
+  throw 'Error: setColorInternal unimplemented for ' + this.klass
+};
+
+Thing.prototype.draw = function() {
+  throw 'Error: draw unimplemented for type ' + this.klass;
+
+};
+
+Thing.prototype.advance = function() {
+  throw 'Error: advance unimplemented for type ' + this.klass;
+};
+
+Thing.prototype.getOuterRadius = function() {
+  if (!this.outerRadius) {
+    throw 'Error: outerRadius not set for ' + this.klass;
+  }
+  return this.outerRadius;
 };

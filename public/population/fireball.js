@@ -5,15 +5,21 @@ Fireball = function(parent, speed) {
   this.parent = parent;
   this.small = new ImageCross().
       setColor([1, 1, 1, 1]).
-      setTexture(ImageManager.Textures.SPARK, true);
+      setTexture(Textures.SPARK, true);
   this.small.size = [1, 1, 1];
   this.parts = [this.small];
   this.size = [1, 1, 1];
+
+  this.klass = "Fireball";
+  this.outerRadius = .867;
 };
 Util.inherits(Fireball, Thing);
 
 Fireball.prototype.advance = function(dt) {
-
+  if (world.board.relativeHeight(this) <= 0) {
+    this.detonate();
+    return;
+  }
   for (var i = 0; i < 3; i++) {
     this.position[i] += this.speed[i]*dt;
   };
@@ -37,6 +43,7 @@ Fireball.prototype.advance = function(dt) {
 
 Fireball.prototype.draw = function() {
   gl.enable(gl.BLEND);
+  //gl.disable(gl.DEPTH_TEST);
   gl.pushMatrix();
   this.transform();
 
@@ -53,4 +60,6 @@ Fireball.prototype.dispose = function() {
   this.small.dispose();
 };
 
-Fireball.prototype.detonate = function(){};
+Fireball.prototype.detonate = function(){
+  world.projectilesToRemove.push(this); 
+};

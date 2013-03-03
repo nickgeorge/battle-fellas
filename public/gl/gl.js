@@ -46,13 +46,14 @@ GL.prototype.popMatrix = function() {
   this.stackIndex--;
 };
 
-GL.prototype.setMatrixUniforms = function() {
-  this.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, this.pMatrix);
-  this.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, this.mvMatrix);
+GL.prototype.setMatrixUniforms = function(opt_shaderProgram) {
+  var thisShaderProgram = opt_shaderProgram || shaderProgram;
+  this.uniformMatrix4fv(thisShaderProgram.pMatrixUniform, false, this.pMatrix);
+  this.uniformMatrix4fv(thisShaderProgram.mvMatrixUniform, false, this.mvMatrix);
 
   mat4.toInverseMat3(this.mvMatrix, this.normalMatrix);
   mat3.transpose(this.normalMatrix);
-  this.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, this.normalMatrix);
+  this.uniformMatrix3fv(thisShaderProgram.nMatrixUniform, false, this.normalMatrix);
 };
 
 GL.prototype.rotate = function (angle, axis) {

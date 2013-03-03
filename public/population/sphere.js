@@ -1,10 +1,9 @@
-
 Sphere = function(radius, rgba1) {
   this.radius = radius || 1;
   this.longitudeCount = 15;
   this.latitudeCount = 15;
   this.rgba1 = rgba1;
-  this.rgba2 = Util.reverseColor(this.rgba1);
+  this.rgba2 = Vector.reverseColor(this.rgba1);
   this.orientation = [2*Math.random() - .5, 2*Math.random() - .5, 0];
   this.rotationSpeed = Math.random();
   this.phase = 0;
@@ -43,22 +42,6 @@ Sphere.prototype.draw = function() {
   gl.drawElements(gl.TRIANGLES, this.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
   gl.popMatrix();  
-};
-
-Sphere.prototype.setRandomPosition = function(var_args) {
-  var dp = null;
-  if (arguments.length == 1) {
-    dp = [arguments[0], arguments[0], arguments[0]];
-  }
-  if (arguments.length == 3) {
-    dp = [arguments[0], arguments[1], arguments[2]];
-  }
-  this.position = [
-    (2*Math.random() - 1)*dp[0],
-    (2*Math.random() - 1)*dp[1],
-    (2*Math.random() - 1)*dp[2]
-  ];
-  return this;
 };
 
 Sphere.prototype.initBuffers = function() {

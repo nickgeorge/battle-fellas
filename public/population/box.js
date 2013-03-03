@@ -45,7 +45,7 @@ Box.prototype.render = function() {
   if (this.texture) {
     if (!this.texture.loaded) return;
     gl.uniform1i(shaderProgram.useTextureUniform, true);
-    ImageManager.bindTexture(this.texture);
+    Textures.bindTexture(this.texture);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, this.textureBuffer.itemSize, gl.FLOAT, false, 0, 0);
   };
@@ -253,8 +253,7 @@ Box.initBuffers = function() {
     16, 17, 18,   16, 18, 19, // Right face
     20, 21, 22,   20, 22, 23  // Left face
   ];
-  Box.indexBuffer = Util.generateIndexBuffer(vertexIndices); 
-  console.log(Box.indexBuffer);
+  Box.indexBuffer = Util.generateIndexBuffer(vertexIndices);
 };
 
 Box.prototype.dispose = function() {

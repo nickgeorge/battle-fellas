@@ -63,6 +63,22 @@ Vector.average = function(v1, v2) {
   return Vector.multiply(Vector.sum(v1, v2), .5);
 };
 
-Vector.mag = function(v1) {
-  return distanceSquared(v1, [0, 0, 0]);
+Vector.magSquared = function(v1) {
+  return Vector.distanceSquared(v1, [0, 0, 0]);
+};
+
+Vector.cross = function(v1, v2) {
+  return [
+    v1[1]*v2[2] - v1[2]*v2[1],
+    v1[2]*v2[0] - v1[0]*v2[2],
+    v1[0]*v2[1] - v1[1]*v2[0]
+  ];
+};
+
+Vector.normalize = function(v) {
+  return Vector.multiply(v, 1/Math.sqrt(Vector.magSquared(v)));
+};
+
+Vector.normal = function(v1, v2) {
+  return Vector.normalize(Vector.cross(v1, v2));
 };

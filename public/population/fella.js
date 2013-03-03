@@ -1,7 +1,7 @@
-Fella = function(xyz, rgba) {
-
+Fella = function(position, rgba) {
   Util.base(this);
-  this.position = xyz;
+  
+  this.position = position;
   this.theta = 0;
   this.phi = 0;
   this.speed = Fella.SPEED;
@@ -10,6 +10,9 @@ Fella = function(xyz, rgba) {
   this.parts = [];
   this.color = rgba || Vector.randomColor(.1);
   this.buildBody(this.color);
+
+  this.klass = "Fella";
+  this.outerRadius = 1.5;
 };
 Util.inherits(Fella, Thing);
 
@@ -48,6 +51,7 @@ Fella.prototype.advanceAlive = function(dt) {
 
   this.position[0] += Math.cos(this.theta)*this.speed*dt;
   this.position[1] += Math.sin(this.theta)*this.speed*dt;
+  this.position[2] = world.board.getHeight(this.position[0], this.position[1]);
 
   if (this.position[0] > world.board.max(0)) {
     this.position[0] = world.board.max(0);
@@ -118,7 +122,7 @@ Fella.prototype.buildBody = function(rgb) {
   this.parts.head = new Box([.5, .5, .5]).
       setPosition([0, 0, 2.125]).
       setColor(rgb).
-      setTexture(ImageManager.Textures.THWOMP).
+      setTexture(Textures.THWOMP).
       createTextureBuffer({
         front: [0, 1, 0, 1]
       });
@@ -161,7 +165,7 @@ Fella.prototype.shoot = function() {
     -s*Math.sin(phi)
   ];
   var shot = new Arrow(this, v_shot).
-      setPosition([this.position[0], this.position[1], 1.5]).
+      setPosition([this.position[0], this.position[1], this.position[2] + 1.5]).
       setTheta(theta).
       setPhi(phi).
       setColor(this.color);

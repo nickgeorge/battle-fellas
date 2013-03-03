@@ -7,7 +7,6 @@ require('./console.js');
 require('./socket_listener.js');
 require('./logger.js');
 
-
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 

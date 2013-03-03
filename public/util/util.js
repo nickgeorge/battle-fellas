@@ -110,7 +110,7 @@ Array.prototype.remove = function(removee){
 };
 
 Array.prototype.pushAll = function(addee) {
-  for (var i = 0; addee[i]; i++) {
+  for (var i = 0, length = addee.length; i < addee.length; i++) {
     this.push(addee[i]);
   }
 };
@@ -124,4 +124,13 @@ Array.prototype.flatten = function() {
       flattenedThis.push(this[i]);
     }
   }
+};
+
+Array.prototype.average = function() {
+  var sum = 0;
+  var length = this.length;
+  for (var i = 0; i < length; i++) {
+    sum += this[i];
+  }
+  return sum / (length);
 };

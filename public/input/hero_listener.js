@@ -62,7 +62,7 @@ HeroListener.prototype.attachEvents = function() {
   document.addEventListener('mousemove', 
       Util.bind(this.onMouseMove, this), false);
 };
-
+ 
 HeroListener.prototype.onMouseDown = function(e) {
   if (!document.webkitCurrentFullScreenElement) {
     this.canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
@@ -72,7 +72,14 @@ HeroListener.prototype.onMouseDown = function(e) {
     e.preventDefault();
     return;
   }
-  this.hero && this.hero.shoot();
+
+  if (e.button == 0) {
+    this.hero && this.hero.shootArrow();
+  } else if (e.button == 2) {
+    this.hero && this.hero.shootRail();
+  }
+
+
 };
 
 HeroListener.prototype.enableMouseLock = function() {
@@ -95,7 +102,6 @@ HeroListener.prototype.onMouseMove = function(event) {
         event.mozMovementY ||
         event.webkitMovementY ||
         0;
-
     this.hero.theta -= movementX * this.sensitivityX;
     this.hero.phi -= movementY * this.sensitivityY;
   }

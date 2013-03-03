@@ -17,7 +17,8 @@
     <script src='gl/shader_program.js'></script>
     <script src='gl/webgl-utils.js'></script>
     <script src='input/hero_listener.js'></script>
-    <script src='media/image_manager.js'></script>
+    <script src='media/texture.js'></script>
+    <script src='media/sound_manager.js'></script>
     <script src='population/thing.js'></script>
     <script src='population/arrow.js'></script>
     <script src='population/board.js'></script>
@@ -28,6 +29,7 @@
     <script src='population/hero.js'></script>
     <script src='population/smart_crate.js'></script>
     <script src='population/sphere.js'></script>
+    <script src='population/killball.js'></script>
     <script src='effects/double_explosion.js'></script>
     <script src='effects/image_cross.js'></script>
     <script src='ui/crosshair.js'></script>
@@ -148,10 +150,10 @@
             world.advance(dt);
           }
           framerate.snapshot();
-          if (framerate.rollingAverage < 45) {
-            console.log('Low Frame Rate: ' + 
-                framerate.rollingAverage);
-          }
+          // if (framerate.rollingAverage < 45) {
+          //   console.log('Low Frame Rate: ' + 
+          //       framerate.rollingAverage);
+          // }
           if (framerate.rollingAverage > 100) {
             // console.log('High Frame Rate: ' + 
             //     framerate.rollingAverage);
@@ -181,7 +183,7 @@
         keyListener.attachEvents();
 
         shaderProgram = ShaderProgram.getShaderProgram();
-        ImageManager.initTextures();
+        Textures.initTextures();
 
         client = new Client();
 

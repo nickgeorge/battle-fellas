@@ -22,6 +22,7 @@ World.prototype.add = function(thing) {
 
 World.prototype.draw = function() {
   mat4.rotate(gl.mvMatrix, this.theta, [0, 0, 1]);
+  shaderProgram.reset();
   this.board.draw();
   this.things.apply('draw');
   this.effects.apply('draw');
@@ -63,17 +64,10 @@ World.prototype.populate = function() {
   var haveBadGuys = true;
   var numSmartCrates = haveBadGuys && 10;
   var numFellas = haveBadGuys && 15;
-  var numDumbCrates = 20;
+  var numDumbCrates = 40;
 
-  this.board = new Box([100, 200, 1]).
-      setColor([1, 1, 1]).
-      setPosition([0, 0, -.5]).
-      setTexture(ImageManager.Textures.GRASS).
-      createTextureBuffer({
-        top: [0, 15, 0, 30]
-      });
+  this.board = new Board();
 
-  //this.board = new Board();
   Tribe.MOON_BROTHERS.neutral = true;
   for (var i = 0; i < numDumbCrates; i++) {
     this.add(DumbCrate.newRandom().setTribe(Tribe.MOON_BROTHERS));
@@ -86,15 +80,25 @@ World.prototype.populate = function() {
     this.add(SmartCrate.newRandom().setTribe(Tribe.BURNED_MEN));
   }
 
+  //this.add(Killball.newRandom().setTribe(Tribe.BURNED_MEN));
+
   var hero = Hero.newRandom().setTribe(Tribe.STONE_CROWS);
   this.add(hero);
   hud.setHero(hero);
   camera.anchor = hero;
 };
 
+World.prototype.reset = function() {
+  world.things = [];
+  world.effects = [];
+  world.projectiles = [];
+  Tribe.clear();
+
+  world.populate();
+}
+
 World.prototype.inBounds = function(xyz) {
-  return Math.abs(xyz[0]) < this.board.max(0) 
-      && Math.abs(xyz[1]) < this.board.max(1);
+  return this.board.inBounds(xyz);
 };
 
 World.prototype.addAndRemoveThings = function() {
@@ -125,6 +129,10 @@ World.prototype.checkCollisions = function() {
           this.projectilesToRemove.push(this);
         } else {
           if (thing.alive) {
+            if (thing instanceof DumbCrate &&
+                projectile.parent instanceof Hero) {
+              projectile.parent.ammo.arrows += 3;
+            }
             thing.die();
             projectile.detonate();
           }
