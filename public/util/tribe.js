@@ -49,10 +49,7 @@ Tribe.getRandomEnemy = function(allies) {
 Tribe.clear = function(opt_tribesToWipe) {
   var tribesToWipe = opt_tribesToWipe || Tribe.LIST_;
   for (var i = 0, tribe; tribe = tribesToWipe[i]; i++) {
-    console.log(tribe);
     tribe.members = [];
-    console.log(tribe)
-    console.log("\n\n\n");
   }
 };
 

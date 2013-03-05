@@ -4,7 +4,7 @@ var server = require('http').createServer(app);
 
 require('./utils.js');
 require('./console.js');
-require('./socket_listener.js');
+require('./socket_server.js');
 require('./logger.js');
 
 app.set('views', __dirname + '/views');
@@ -17,6 +17,5 @@ app.use(function(req, res){
 
 Console.enable();
 socketServer = new SocketServer(server);
-
 
 server.listen(80);

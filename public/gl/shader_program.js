@@ -97,7 +97,7 @@ ShaderProgram.getShaderProgram = function() {
 ShaderProgram.prototype.reset = function() {
   this.setUseLighting(ShaderProgram.USE_LIGHTING_DEFAULT);
   gl.uniform1i(this.useTextureUniform, ShaderProgram.USE_TEXTURE_DEFAULT); 
-  Textures.bindTexture(Textures.CRATE);
+  //Textures.bindTexture(Textures.CRATE);
   gl.uniform3fv(this.scaleUniform, ShaderProgram.SCALE_DEFAULT); 
   gl.uniform4fv(this.colorOverrideUniform, ShaderProgram.COLOR_OVERRIDE_DEFAULT);
 };

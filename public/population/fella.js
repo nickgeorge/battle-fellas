@@ -1,6 +1,6 @@
 Fella = function(position, rgba) {
   Util.base(this);
-  
+
   this.position = position;
   this.theta = 0;
   this.phi = 0;
@@ -24,10 +24,10 @@ Fella.prototype.advance = function(dt) {
     if (!this.target || !this.target.alive) this.aquireTarget();
     if (this.target && this.target.alive) {
       this.theta = Vector.thetaTo(this.position, this.target.position);
-      if (Math.random() < .015) this.shoot();
+      if (Math.random() < .0075) this.shoot();
     }
     this.advanceAlive(dt);
-  } else { 
+  } else {
     this.advanceDead(dt);
   }
 };
@@ -92,6 +92,8 @@ Fella.prototype.die = function() {
     }
   }
   this.alive = false;
+  SoundManager.play(Sounds.GLASS);
+
   world.things.remove(this);
   world.effects.push(this);
 };
@@ -201,5 +203,5 @@ Fella.prototype.eyeLevel = function() {
     fellaCenter[0],
     fellaCenter[1],
     fellaCenter[2] + .9375
-  ]; 
+  ];
 };

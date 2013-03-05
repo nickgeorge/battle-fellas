@@ -31,6 +31,7 @@ SmartCrate.prototype.die = function() {
   this.box.setColor([1, 1, 1, 1]);
   this.box.texture = null;
   this.alive = false;
+  SoundManager.play(Sounds.METAL_EXPLOSION);
 
   var SmartCrate = this;
   world.effects.push(new DoubleExplosion(2, null, null, function() {
@@ -42,12 +43,12 @@ SmartCrate.prototype.advance = function(dt) {
   if (this.alive) {
     if (!this.target || !this.target.alive) this.aquireTarget();
     if (this.target && this.target.alive) {
-      if (Math.random() < .005) this.shoot();
+      if (Math.random() < .007) this.shoot();
     }
     this.progress > this.maxProgress && (this.direction = -1);
     this.progress < 0 && (this.direction = 1);
     this.progress += this.direction * parseFloat(dt);
-    this.position = Vector.sum(this.start, 
+    this.position = Vector.sum(this.start,
         Vector.multiply(
             Vector.difference(this.start, this.end),
             this.progress));
@@ -72,7 +73,7 @@ SmartCrate.prototype.dispose = function() {
 };
 
 SmartCrate.prototype.shoot = function() {
-  var s = 30;
+  var s = 50;
   var theta = Vector.thetaTo(
       this.position, this.target.eyeLevel());
   var phi = Vector.phiTo(
@@ -106,7 +107,7 @@ SmartCrate.prototype.getEnd = function() {
     endX,
     endY,
     Math.max(
-      world.board.getHeight(endX, endY) + 2, 
+      world.board.getHeight(endX, endY) + 2,
       this.start[2] + this.range*Math.sin(phi))
   ];
 };

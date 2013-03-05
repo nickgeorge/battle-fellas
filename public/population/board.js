@@ -148,14 +148,7 @@ Board.prototype.generateBuffers = function() {
         1, 1, 1, 1,
         1, 1, 1, 1,
       ]);
-      textures.pushAll([
-        0, 0,
-        1, 0,
-        1, 1,
-        0, 0,
-        1, 1,
-        0, 1,
-      ]);
+      textures.pushAll(Board.TEXTURE_LISTS[Math.floor(Math.random() * 3)]);
       indicies.pushAll([
         count, count + 1, count + 2,
         count + 3, count + 4, count + 5
@@ -252,3 +245,30 @@ Board.prototype.inBounds = function(xyz) {
   return Math.abs(xyz[0]) < this.max(0) 
       && Math.abs(xyz[1]) < this.max(1);
 };
+
+Board.TEXTURE_LISTS = [
+  [ // 0
+    0, 0,
+    1, 0,
+    1, 1,
+    0, 0,
+    1, 1,
+    0, 1,
+  ],
+  [ // 1
+    1, 0,
+    0, 0,
+    1, 1,
+    1, 0,
+    1, 1,
+    0, 1,
+  ],
+  [ // 2
+    1, 1,
+    1, 0,
+    0, 0,
+    1, 1,
+    0, 1,
+    0, 0
+  ]
+]

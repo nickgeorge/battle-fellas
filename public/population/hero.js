@@ -29,7 +29,7 @@ Hero.prototype.aquireTarget = function() {
 Hero.prototype.advance = function(dt) {
   if (this.alive) {
     this.advanceAlive(dt);
-  } else { 
+  } else {
     this.advanceDead(dt);
   }
 };
@@ -42,7 +42,7 @@ Hero.prototype.advanceAlive = function(dt) {
 
   this.position[0] -= Math.cos(this.theta)*this.vX*dt -
       Math.sin(this.theta)*this.vY*dt;
-  this.position[1] -= Math.sin(this.theta)*this.vX*dt + 
+  this.position[1] -= Math.sin(this.theta)*this.vX*dt +
       Math.cos(this.theta)*this.vY*dt;
 
   if (this.position[0] > world.board.max(0)) {
@@ -66,7 +66,7 @@ Hero.prototype.eyeLevel = function() {
     fellaEyeLevel[0],
     fellaEyeLevel[1],
     fellaEyeLevel[2] - Math.sin(this.bob)/3.5
-  ]; 
+  ];
 };
 
 Hero.prototype.shootArrow = function() {
@@ -88,15 +88,16 @@ Hero.prototype.shootArrow = function() {
       setColor([1, 1, 1]);
 
   world.projectiles.push(shot);
-  SoundManager.play(SoundManager.ARROW);
+  SoundManager.play(Sounds.ARROW);
 };
 
 Hero.prototype.shootRail = function() {
   if (this.ammo.rails <= 0) return;
 };
 
-Hero.prototype.die = function() { 
+Hero.prototype.die = function() {
   this.tribe.remove(this);
+  logger.log('You died :c');
   world.reset();
 };
 

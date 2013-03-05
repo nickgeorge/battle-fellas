@@ -4,7 +4,7 @@
     <meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>
     <link rel='shortcut icon' href='favicon.ico' type='image/x-icon' />
     <link rel='stylesheet' href='style.css' type='text/css' />
-    
+
     <script src='socket.io/socket.io.js'></script>
     <script src='util/framerate.js'></script>
     <script src='util/light.js'></script>
@@ -87,7 +87,7 @@
       varying vec3 vLightWeighting;
 
       void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * 
+        gl_Position = uPMatrix * uMVMatrix *
             vec4(aVertexPosition * uScale, 1.0);
         vTextureCoord = aTextureCoord;
 
@@ -99,7 +99,7 @@
         if (!uUseLighting) {
           vLightWeighting = vec3(1.0, 1.0, 1.0);
         } else {
-          vLightWeighting = 
+          vLightWeighting =
               uAmbientColor + uDirectionalColor * directionalLightWeighting;
         }
         if (uColorOverride[0] > -.5) vColor = uColorOverride;
@@ -108,7 +108,7 @@
     </script>
 
     <script>
-
+      // Globals
       var gl = null;
       var shaderProgram = null;
       var framerate = null;
@@ -116,12 +116,13 @@
       var camera = null;
       var crosshair = null;
       var client = null;
+      var logger = null;
 
       function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clearColor(world.clearColorRgba[0], 
-            world.clearColorRgba[1], 
-            world.clearColorRgba[2], 
+        gl.clearColor(world.clearColorRgba[0],
+            world.clearColorRgba[1],
+            world.clearColorRgba[2],
             1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         mat4.perspective(45, gl.viewportWidth/gl.viewportHeight,
@@ -136,7 +137,6 @@
         camera.transform();
 
         world.draw();
-
         hud.render();
       }
 
@@ -150,14 +150,6 @@
             world.advance(dt);
           }
           framerate.snapshot();
-          // if (framerate.rollingAverage < 45) {
-          //   console.log('Low Frame Rate: ' + 
-          //       framerate.rollingAverage);
-          // }
-          if (framerate.rollingAverage > 100) {
-            // console.log('High Frame Rate: ' + 
-            //     framerate.rollingAverage);
-          }
         }
         framerate.lastTime = timeNow;
       }
@@ -172,7 +164,7 @@
         var glCanvas = document.getElementById('gl-canvas');
         gl = GL.createGL(glCanvas);
 
-        var hudCanvas = document.getElementById('hud-canvas');     
+        var hudCanvas = document.getElementById('hud-canvas');
 
         window.addEventListener('resize',
             Util.partial(resize, glCanvas, hudCanvas, gl));
@@ -192,7 +184,8 @@
 
         framerate = new Framerate('framerate');
 
-        hud = new HUD(hudCanvas, camera, keyListener, framerate);   
+        hud = new HUD(hudCanvas, camera, keyListener, framerate);
+        logger = hud.getLogger();
 
         world = new World();
         world.populate();

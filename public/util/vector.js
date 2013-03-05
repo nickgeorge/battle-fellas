@@ -4,7 +4,7 @@ Vector.randomColor = function(min) {
   return [
     Math.random()*(1-min) + min,
     Math.random()*(1-min) + min,
-    Math.random()*(1-min) + min, 
+    Math.random()*(1-min) + min,
     1
   ];
 };
@@ -43,6 +43,10 @@ Vector.invert = function(v) {
   return Vector.multiply(v, -1);
 };
 
+Vector.minus = function(v1, v2) {
+  return Vector.difference(v2, v1);
+};
+
 Vector.difference = function(v1, v2) {
   return [
     v2[0] - v1[0],
@@ -66,6 +70,10 @@ Vector.average = function(v1, v2) {
 Vector.magSquared = function(v1) {
   return Vector.distanceSquared(v1, [0, 0, 0]);
 };
+
+Vector.mag = function(v1) {
+  return Math.sqrt(Vector.magSquared(v1));
+}
 
 Vector.cross = function(v1, v2) {
   return [

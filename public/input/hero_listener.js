@@ -29,7 +29,7 @@ HeroListener = function(canvas) {
 KeyCode = {
   CTRL: 17,
   SPACE: 32,
-  
+
   LEFT: 37,
   UP: 38,
   RIGHT: 39,
@@ -42,7 +42,7 @@ KeyCode = {
   F: 70,
   R: 82,
   P: 80
-};  
+};
 
 HeroListener.prototype.attachEvents = function() {
   document.addEventListener('keydown',
@@ -52,24 +52,25 @@ HeroListener.prototype.attachEvents = function() {
   document.addEventListener('mousedown',
       Util.bind(this.onMouseDown, this), true);
 
-  document.addEventListener('pointerlockchange', 
+  document.addEventListener('pointerlockchange',
       Util.bind(this.onPointerLockChange, this), false);
-  document.addEventListener('mozpointerlockchange', 
+  document.addEventListener('mozpointerlockchange',
       Util.bind(this.onPointerLockChange, this), false);
-  document.addEventListener('webkitpointerlockchange', 
+  document.addEventListener('webkitpointerlockchange',
       Util.bind(this.onPointerLockChange, this), false);
 
-  document.addEventListener('mousemove', 
+  document.addEventListener('mousemove',
       Util.bind(this.onMouseMove, this), false);
 };
- 
+
 HeroListener.prototype.onMouseDown = function(e) {
   if (!document.webkitCurrentFullScreenElement) {
-    this.canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    //this.canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
   }
   if (!this.mouseIsLocked) {
     this.enableMouseLock();
     e.preventDefault();
+    console.log("locked");
     return;
   }
 
@@ -78,8 +79,6 @@ HeroListener.prototype.onMouseDown = function(e) {
   } else if (e.button == 2) {
     this.hero && this.hero.shootRail();
   }
-
-
 };
 
 HeroListener.prototype.enableMouseLock = function() {
@@ -102,6 +101,8 @@ HeroListener.prototype.onMouseMove = function(event) {
         event.mozMovementY ||
         event.webkitMovementY ||
         0;
+
+    //console.log(movementX + " : " + movementY);
     this.hero.theta -= movementX * this.sensitivityX;
     this.hero.phi -= movementY * this.sensitivityY;
   }
@@ -129,36 +130,36 @@ HeroListener.prototype.onKey = function(event) {
 
   var target = this.hero;
   switch (keyCode) {
-    case KeyCode.A: 
-      target.vY = isKeydown ? -target.vRMag : 
+    case KeyCode.A:
+      target.vY = isKeydown ? -target.vRMag :
           (this.keyMap[KeyCode.D] ? target.vRMag : 0);
       break;
-    case KeyCode.D: 
-      target.vY = isKeydown ? target.vRMag : 
+    case KeyCode.D:
+      target.vY = isKeydown ? target.vRMag :
           (this.keyMap[KeyCode.A] ? -target.vRMag : 0);
       break;
-    case KeyCode.W: 
-      target.vX = isKeydown ? -target.vRMag : 
+    case KeyCode.W:
+      target.vX = isKeydown ? -target.vRMag :
           (this.keyMap[KeyCode.S] ? target.vRMag : 0);
       break;
-    case KeyCode.S: 
-      target.vX = isKeydown ? target.vRMag : 
+    case KeyCode.S:
+      target.vX = isKeydown ? target.vRMag :
           (this.keyMap[KeyCode.W] ? -target.vRMag : 0);
       break;
-    case KeyCode.UP: 
-      target.vPhi = isKeydown ? target.vPhiMag : 
+    case KeyCode.UP:
+      target.vPhi = isKeydown ? target.vPhiMag :
           (this.keyMap[KeyCode.DOWN] ? -target.vPhiMag : 0);
       break;
-    case KeyCode.DOWN: 
-      target.vPhi = isKeydown ? -target.vPhiMag : 
+    case KeyCode.DOWN:
+      target.vPhi = isKeydown ? -target.vPhiMag :
           (this.keyMap[KeyCode.UP] ? target.vPhiMag : 0);
       break;
-    case KeyCode.LEFT: 
-      target.vTheta = isKeydown ? target.vThetaMag : 
+    case KeyCode.LEFT:
+      target.vTheta = isKeydown ? target.vThetaMag :
           (this.keyMap[KeyCode.RIGHT] ? -target.vThetaMag : 0);
       break;
-    case KeyCode.RIGHT: 
-      target.vTheta = isKeydown ? -target.vThetaMag : 
+    case KeyCode.RIGHT:
+      target.vTheta = isKeydown ? -target.vThetaMag :
           (this.keyMap[KeyCode.LEFT] ? target.vThetaMag : 0);
       break;
     case KeyCode.SPACE:
@@ -176,7 +177,7 @@ HeroListener.prototype.onKey = function(event) {
       hud.clear();
       break;
     default:
-      console.log(event.keyCode); 
+      console.log(event.keyCode);
       return;
   }
   event.preventDefault();

@@ -24,13 +24,11 @@ Fireball.prototype.advance = function(dt) {
     this.position[i] += this.speed[i]*dt;
   };
 
-  if (Math.random() > .2) {
-    this.scale = Math.random() + .5;
-    this.phi = Math.random() * 2*pi;
-    this.theta = Math.random() * 2*pi
-  }
-  if (Math.random() > .9) {
+  this.scale = Math.random() + .5;
+  this.phi = Math.random() * 2*pi;
+  this.theta = Math.random() * 2*pi
 
+  if (Math.random() > .9) {
     this.small.setColor([
       Math.random(),
       Math.random(),
@@ -43,7 +41,7 @@ Fireball.prototype.advance = function(dt) {
 
 Fireball.prototype.draw = function() {
   gl.enable(gl.BLEND);
-  //gl.disable(gl.DEPTH_TEST);
+  gl.depthMask(false);
   gl.pushMatrix();
   this.transform();
 
@@ -52,7 +50,7 @@ Fireball.prototype.draw = function() {
   this.small.draw();
 
   gl.popMatrix();  
-  gl.enable(gl.DEPTH_TEST);
+  gl.depthMask(true);
   shaderProgram.reset();
 };
 

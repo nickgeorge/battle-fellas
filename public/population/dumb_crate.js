@@ -24,6 +24,7 @@ DumbCrate.prototype.die = function() {
   this.box.setColor([1, 1, 1, 1]);
   this.box.texture = null;
   this.alive = false;
+  SoundManager.play(Sounds.POP);
 
   var dumbCrate = this;
   world.effects.push(new DoubleExplosion(1, null, null, function() {

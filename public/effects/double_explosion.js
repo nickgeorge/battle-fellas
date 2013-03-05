@@ -15,17 +15,21 @@ DoubleExplosion = function(size, smallColor, bigColor, callback) {
 Util.inherits(DoubleExplosion, Thing);
 
 DoubleExplosion.prototype.advance = function(dt) {
-this.size += this.initialSize*20 * dt;
+  this.size += this.initialSize*20 * dt;
   if (this.size > this.initialSize*5) {
     world.effectsToRemove.push(this);
     this.callback && this.callback();
   }
+
+  this.scale = Math.random() + .5;
+  this.phi = Math.random() * 2*pi;
+  this.theta = Math.random() * 2*pi
 };
 
 DoubleExplosion.prototype.draw = function() {
 
-  gl.enable(gl.BLEND)
-  gl.disable(gl.DEPTH_TEST);
+  gl.enable(gl.BLEND);
+  gl.depthMask(false);
 
   gl.pushMatrix();
   this.transform();
@@ -41,8 +45,7 @@ DoubleExplosion.prototype.draw = function() {
   ]); 
   this.big.draw();
 
+  gl.depthMask(true);
   gl.popMatrix();  
-//  gl.disable(gl.BLEND)
-  gl.enable(gl.DEPTH_TEST);
   shaderProgram.reset();
 };

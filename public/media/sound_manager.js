@@ -1,12 +1,14 @@
+var root_ = 'media/sounds/';
+
 SoundManager = {
-  
-  ROOT: 'media/sounds/',
-
-  ARROW: 'bottle1.wav',
-  
-
-
   play: function(sound) {
-    new Audio(this.ROOT + sound).play();
+    new Audio(root_ + sound).play();
   }
+}
+
+Sounds = {
+  ARROW: 'arrow_short.wav',
+  METAL_EXPLOSION: 'metal_explosion.wav',
+  GLASS: 'glass_short.wav',
+  POP: 'pop_short.wav'
 }

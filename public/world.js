@@ -132,11 +132,28 @@ World.prototype.checkCollisions = function() {
             if (thing instanceof DumbCrate &&
                 projectile.parent instanceof Hero) {
               projectile.parent.ammo.arrows += 3;
+              logger.log("Picked up 3 arrows.");
             }
             thing.die();
             projectile.detonate();
           }
         }
+      }
+    }
+  }
+  for (var i = 0, thingA; thingA = this.things[i]; i++) {
+    for (var j = i + 1, thingB; thingB = this.things[j]; j++) {
+      if (Collision.closeEnough(thingA, thingB)) {
+        var vectorTo = Vector.difference(thingA.position, thingB.position);
+        var distance = Vector.mag(vectorTo);
+        var outerRadiusA = thingA.getOuterRadius();
+        var outerRadiusB = thingB.getOuterRadius();
+        var delta = distance -
+            Math.sqrt(outerRadiusA*outerRadiusA + outerRadiusB*outerRadiusB);
+
+        var push = Vector.multiply(vectorTo, delta/distance);
+        thingA.position = Vector.minus(thingA.position, push);
+        thingB.position = Vector.sum(thingB.position, push);
       }
     }
   }
