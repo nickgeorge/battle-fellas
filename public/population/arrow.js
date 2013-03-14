@@ -2,9 +2,7 @@ Arrow = function(parent, speed) {
   Util.base(this);
   this.speed = speed;
   this.parent = parent;
-  this.position = [0, 0, 0];
-  this.shaft = new Box([1.5, .0625, .0625]).
-      setColor([.7, 1, .7]);
+  this.shaft = new Box(Arrow.SHAFT_SIZE);
 
   this.parts = [this.shaft];
 
@@ -14,6 +12,7 @@ Arrow = function(parent, speed) {
 Util.inherits(Arrow, Thing);
 
 Arrow.DEFAULT_SPEED = 60;
+Arrow.SHAFT_SIZE = [1.5, .0625, .0625];
 
 Arrow.prototype.advance = function(dt) {
   for (var i = 0; i < 3; i++) {
@@ -62,5 +61,5 @@ Arrow.prototype.dispose = function() {
 Arrow.prototype.detonate = function() {
   world.effects.push(new DoubleExplosion(.25, [1, 1, 0], [1, 1, 1]).
       setPosition(this.position));
-  world.projectilesToRemove.push(this); 
+  world.projectilesToRemove.push(this);
 };

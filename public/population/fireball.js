@@ -1,10 +1,11 @@
 Fireball = function(parent, speed) {
   this.super();
   this.scale = 1;
+  this.scale3 = [1, 1, 1]
   this.speed = speed;
   this.parent = parent;
   this.small = new ImageCross().
-      setColor([1, 1, 1, 1]).
+      setColor(Vector.WHITE).
       setTexture(Textures.SPARK, true);
   this.small.size = [1, 1, 1];
   this.parts = [this.small];
@@ -45,11 +46,11 @@ Fireball.prototype.draw = function() {
   gl.pushMatrix();
   this.transform();
 
-  gl.uniform3fv(shaderProgram.scaleUniform, 
-    [this.scale, this.scale, this.scale]); 
+  gl.uniform3fv(shaderProgram.scaleUniform,
+    [this.scale, this.scale, this.scale]);
   this.small.draw();
 
-  gl.popMatrix();  
+  gl.popMatrix();
   gl.depthMask(true);
   shaderProgram.reset();
 };
@@ -59,5 +60,5 @@ Fireball.prototype.dispose = function() {
 };
 
 Fireball.prototype.detonate = function(){
-  world.projectilesToRemove.push(this); 
+  world.projectilesToRemove.push(this);
 };

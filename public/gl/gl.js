@@ -12,7 +12,7 @@ GL.createGL = function(canvas) {
 
   gl.stack = [];
   gl.stackIndex = -1;
-  
+
   gl.normalMatrix = mat3.create();
   gl.canvas = canvas;
 
@@ -25,7 +25,7 @@ GL.createGL = function(canvas) {
   gl.enable(gl.CULL_FACE);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   gl.cullFace(gl.BACK);
-        
+
   return gl;
 }
 
@@ -33,16 +33,16 @@ GL.prototype.pushMatrix = function() {
   this.stackIndex++;
   if (!this.stack[this.stackIndex]) {
     var copy = mat4.create();
-    this.stack.push(copy);      
+    this.stack.push(copy);
   }
-  mat4.set(this.mvMatrix, this.stack[this.stackIndex]);
+  mat4.copy(this.stack[this.stackIndex], this.mvMatrix);
 };
 
 GL.prototype.popMatrix = function() {
   if (this.stackIndex == -1) {
     throw 'Invalid popMatrix!';
   }
-  mat4.set(this.stack[this.stackIndex], this.mvMatrix);
+  mat4.copy(this.mvMatrix, this.stack[this.stackIndex]);
   this.stackIndex--;
 };
 
@@ -52,7 +52,7 @@ GL.prototype.setMatrixUniforms = function(opt_shaderProgram) {
   this.uniformMatrix4fv(thisShaderProgram.mvMatrixUniform, false, this.mvMatrix);
 
   mat4.toInverseMat3(this.mvMatrix, this.normalMatrix);
-  mat3.transpose(this.normalMatrix);
+  mat3.transpose(this.normalMatrix, this.normalMatrix);
   this.uniformMatrix3fv(thisShaderProgram.nMatrixUniform, false, this.normalMatrix);
 };
 

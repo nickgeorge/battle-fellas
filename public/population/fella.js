@@ -1,7 +1,6 @@
-Fella = function(position, rgba) {
+Fella = function(rgba) {
   Util.base(this);
 
-  this.position = position;
   this.theta = 0;
   this.phi = 0;
   this.speed = Fella.SPEED;
@@ -190,18 +189,15 @@ Fella.newRandom = function() {
 };
 
 Fella.prototype.center = function() {
-  return [
-    this.position[0],
-    this.position[1],
-    this.position[2] + 1.1875
-  ];
+  this.center_[0] = this.position[0];
+  this.center_[1] = this.position[1];
+  this.center_[2] = this.position[2] + 1.1875;
+  return this.center_;
 };
 
 Fella.prototype.eyeLevel = function() {
-  var fellaCenter = this.center();
-  return [
-    fellaCenter[0],
-    fellaCenter[1],
-    fellaCenter[2] + .9375
-  ];
+  this.eyeLevel_[0] = this.position[0];
+  this.eyeLevel_[1] = this.position[1];
+  this.eyeLevel_[2] = this.position[2] + 2.125;
+  return this.eyeLevel_;
 };

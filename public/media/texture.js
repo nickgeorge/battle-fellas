@@ -12,7 +12,7 @@ Textures.initTextures = function() {
     THWOMP: Textures.initTexture(Textures.ROOT + 'thwomp.png'),
     GRASS: Textures.initTexture(Textures.ROOT + 'grass.png'),
     SPARK: Textures.initTexture(Textures.ROOT + 'spark.png'),
-    ENERGY: Textures.initTexture(Textures.ROOT + 'energybwa.png'),
+    ENERGY: Textures.initTexture(Textures.ROOT + 'energy_c.png'),
     QUESTION: Textures.initTexture(Textures.ROOT + 'question.png')
   };
 

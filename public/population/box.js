@@ -25,14 +25,14 @@ Box.prototype.draw = function() {
   gl.pushMatrix();
   if (this.fulcrum) {
     mat4.translate(gl.mvMatrix, vec3.add(this.position, this.fulcrum, []));
-    mat4.rotate(gl.mvMatrix, this.theta, [0, 0, 1]);
-    mat4.rotate(gl.mvMatrix, this.phi, [0, 1, 0]);
+    mat4.rotate(gl.mvMatrix, this.theta, Vector.K);
+    mat4.rotate(gl.mvMatrix, this.phi, Vector.J);
     mat4.translate(gl.mvMatrix, vec3.scale(this.fulcrum, -1, []));
   } else {
     mat4.translate(gl.mvMatrix, this.position);
 
-    mat4.rotate(gl.mvMatrix, this.theta, [0, 0, 1]);
-    mat4.rotate(gl.mvMatrix, this.phi, [0, 1, 0]);
+    mat4.rotate(gl.mvMatrix, this.theta, Vector.K);
+    mat4.rotate(gl.mvMatrix, this.phi, Vector.J);
   }
   this.render();
   gl.popMatrix();
@@ -40,7 +40,7 @@ Box.prototype.draw = function() {
 };
 
 Box.prototype.render = function() {
-  !this.colorBuffer && this.setColor([1, 1, 1]);
+  !this.colorBuffer && this.setColor(Vector.WHITE);
 
   if (this.texture) {
     if (!this.texture.loaded) return;

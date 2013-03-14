@@ -25,7 +25,7 @@ Camera.prototype.advance = function(dt) {
 
   this.position[0] -= Math.cos(this.theta)*this.vX*dt -
       Math.sin(camera.theta)*this.vY*dt;
-  this.position[1] -= Math.sin(this.theta)*this.vX*dt + 
+  this.position[1] -= Math.sin(this.theta)*this.vX*dt +
       Math.cos(camera.theta)*this.vY*dt;
 };
 
@@ -34,8 +34,8 @@ Camera.prototype.transform = function() {
   mat4.rotate(gl.mvMatrix, -this.anchor.theta + pi/2, [0, 0, 1]);
   var position = this.anchor.eyeLevel();
   mat4.translate(gl.mvMatrix, [
-    -position[0], 
-    -position[1], 
+    -position[0],
+    -position[1],
     -position[2]
   ]);
 };

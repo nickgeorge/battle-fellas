@@ -1,10 +1,13 @@
 Thing = function() {
   this.phi =  0;
   this.theta = 0;
-  this.position = [0, 0, 0];
+  this.position = new Float32Array(3);
   this.fulcrum = null;
-  this.color =[0, 0, 0, 0];
+  this.color = [0, 0, 0, 0];
   this.tribe = null;
+
+  this.center_ = new Float32Array(3);
+  this.eyeLevel_ = new Float32Array(3);
 
   this.klass = "Thing";
   this.outerRadius = null;
@@ -23,9 +26,13 @@ Thing.prototype.setPhi = function(phi) {
 
 Thing.prototype.setPosition = function(a, b, c) {
   if (a.length == 3) {
-    this.position = [a[0], a[1], a[2]];
+    this.position[0] = a[0];
+    this.position[1] = a[1];
+    this.position[2] = a[2];
   } else {
-    this.position = [a, b, c];
+    this.position[0] = a;
+    this.position[1] = b;
+    this.position[2] = c;
   }
   return this;
 };
@@ -38,7 +45,7 @@ Thing.prototype.setFulcrum = function(xyz) {
 Thing.prototype.setColor = function(rgba) {
   rgba[3] || (rgba[3] = 1);
   this.color = rgba;
-  this.setColorInternal(); 
+  this.setColorInternal();
   return this;
 };
 
@@ -50,8 +57,8 @@ Thing.prototype.setTribe = function(tribe) {
 
 Thing.prototype.transform = function() {
   gl.translate(this.position);
-  gl.rotate(this.theta, [0, 0, 1]);
-  gl.rotate(this.phi, [0, 1, 0]);
+  gl.rotate(this.theta, Vector.K);
+  gl.rotate(this.phi, Vector.J);
 };
 
 Thing.prototype.getClosestThing = function() {

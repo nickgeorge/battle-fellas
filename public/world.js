@@ -101,6 +101,10 @@ World.prototype.inBounds = function(xyz) {
   return this.board.inBounds(xyz);
 };
 
+World.prototype.pause = function() {
+  this.paused = !this.paused;
+};
+
 World.prototype.addAndRemoveThings = function() {
   for (var i = 0, thing; thing = this.thingsToRemove[i]; i++) {
     this.things.remove(thing);

@@ -166,7 +166,7 @@ HeroListener.prototype.onKey = function(event) {
       isKeydown && target.shoot();
       break;
     case KeyCode.P:
-      world.paused = !world.paused;
+      isKeydown && world.pause();
       break;
     case KeyCode.F:
       this.canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);

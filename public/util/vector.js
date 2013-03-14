@@ -1,4 +1,10 @@
-Vector = {};
+Vector = {
+  I: [1, 0, 0],
+  J: [0, 1, 0],
+  K: [0, 0, 1],
+  WHITE: [1, 1, 1, 1],
+  EMPTY: []
+};
 
 Vector.randomColor = function(min) {
   return [
@@ -89,4 +95,30 @@ Vector.normalize = function(v) {
 
 Vector.normal = function(v1, v2) {
   return Vector.normalize(Vector.cross(v1, v2));
+};
+
+/**
+ * Rotates a vector by a yaw, and then pitch.
+ * yaw ~ Thing::theta
+ * pitch ~ Thing::phi
+ */
+Vector.rotate = function(dest, v, yaw, pitch) {
+  var cosYaw = Math.cos(yaw);
+  var sinYaw = Math.sin(yaw);
+  var cosPitch = Math.cos(pitch);
+  var sinPitch = Math.sin(pitch);
+
+  var rotationMatrix = [
+    cosYaw*cosPitch, -cosPitch*sinYaw, sinPitch,
+    sinTheta, cosTheta, 0
+    -cosTheta*sinPhi, sinTheta*sinPhi, cosPhi
+  ]
+
+  //vec3.multiply(d)
+};
+
+Vector.set = function(dest, src) {
+  dest[0] = src[0];
+  dest[1] = src[1];
+  dest[2] = src[2];
 };

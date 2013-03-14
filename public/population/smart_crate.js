@@ -1,7 +1,9 @@
 SmartCrate = function(position) {
+  Util.base(this);
+
   this.theta = Math.random()*2*pi;
   this.phi = 0;
-  this.position = position;
+  this.setPosition(position);
   this.range = Math.random() * 6;
 
   this.start = this.position;
@@ -28,13 +30,13 @@ SmartCrate.prototype.die = function() {
   Util.base(this, 'die');
   world.thingsToRemove.push(this);
   world.effects.push(this);
-  this.box.setColor([1, 1, 1, 1]);
+  this.box.setColor(Vector.WHITE);
   this.box.texture = null;
   this.alive = false;
   SoundManager.play(Sounds.METAL_EXPLOSION);
 
   var SmartCrate = this;
-  world.effects.push(new DoubleExplosion(2, null, null, function() {
+  world.effects.push(new DoubleExplosion(1.5, [0,0,1], [0, 1, 1], function() {
     world.effectsToRemove.push(SmartCrate);
   }).setPosition(this.position));
 };
@@ -48,10 +50,15 @@ SmartCrate.prototype.advance = function(dt) {
     this.progress > this.maxProgress && (this.direction = -1);
     this.progress < 0 && (this.direction = 1);
     this.progress += this.direction * parseFloat(dt);
+    // console.log(this.position);
+    // vec3.add(this.position, this.start, [1,2,3]);
+
     this.position = Vector.sum(this.start,
         Vector.multiply(
             Vector.difference(this.start, this.end),
             this.progress));
+    // console.log(this.position);
+    // console.log("\n");
   }
 };
 
@@ -103,13 +110,14 @@ SmartCrate.prototype.getEnd = function() {
   var endX = this.start[0] + range_xy*Math.cos(theta);
   var endY = this.start[1] + range_xy*Math.sin(theta);
 
-  return [
-    endX,
-    endY,
-    Math.max(
+  var end = new Float32Array(3);
+  end[0] = endX;
+  end[1] = endY;
+  end[2] = Math.max(
       world.board.getHeight(endX, endY) + 2,
-      this.start[2] + this.range*Math.sin(phi))
-  ];
+      this.start[2] + this.range*Math.sin(phi));
+
+  return end;
 };
 
 SmartCrate.newRandom = function() {

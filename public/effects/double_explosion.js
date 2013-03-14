@@ -21,7 +21,8 @@ DoubleExplosion.prototype.advance = function(dt) {
     this.callback && this.callback();
   }
 
-  this.scale = Math.random() + .5;
+  this.size = this.size + Math.random()*dt*40;
+  console.log(this.size);
   this.phi = Math.random() * 2*pi;
   this.theta = Math.random() * 2*pi
 };
@@ -35,17 +36,17 @@ DoubleExplosion.prototype.draw = function() {
   this.transform();
 
   gl.uniform3fv(shaderProgram.scaleUniform,
-      [this.size, this.size, this.size]); 
+      [this.size, this.size, this.size]);
   this.small.draw();
 
   gl.uniform3fv(shaderProgram.scaleUniform, [
-    this.size*1.2, 
-    this.size*1.2, 
-    this.size*1.2
-  ]); 
+    this.size*1.5,
+    this.size*1.5,
+    this.size*1.5
+  ]);
   this.big.draw();
 
   gl.depthMask(true);
-  gl.popMatrix();  
+  gl.popMatrix();
   shaderProgram.reset();
 };

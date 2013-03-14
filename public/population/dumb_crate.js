@@ -1,7 +1,6 @@
 DumbCrate = function(position) {
-  this.theta = 0;
-  this.phi = 0;
-  this.position = position;
+  Util.base(this);
+  this.setPosition(position);
   this.alive = true;
   this.box = new Box([1, 1, 1]).
       setColor([1, 1, 1]).
